@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/pos_background" android:fitsSystemWindows="true" android:gravity="center_horizontal" android:orientation="vertical" android:padding="20dp">
+    <Button android:id="@+id/btnBack" style="@style/Widget.Mpos.Button.Outline" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_gravity="start" android:minWidth="0dp" android:text="‹  Quay lại" />
+    <TextView android:id="@+id/txtReceipt" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="19sp" />
+</LinearLayout>

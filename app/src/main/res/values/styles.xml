@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TextAppearance.Mpos.Title" parent="TextAppearance.Material3.TitleLarge"><item name="android:textColor">@color/pos_text</item><item name="android:textStyle">bold</item></style>
+    <style name="TextAppearance.Mpos.Money" parent="TextAppearance.Material3.HeadlineMedium"><item name="android:textColor">@color/pos_text</item><item name="android:textStyle">bold</item></style>
+    <style name="Widget.Mpos.Button.Primary" parent="Widget.Material3.Button"><item name="backgroundTint">@color/pos_orange</item><item name="android:textColor">@color/pos_surface</item><item name="android:minHeight">52dp</item></style>
+    <style name="Widget.Mpos.Button.Success" parent="Widget.Material3.Button"><item name="backgroundTint">@color/pos_success</item><item name="android:textColor">@color/pos_surface</item><item name="android:minHeight">52dp</item></style>
+    <style name="Widget.Mpos.Button.Outline" parent="Widget.Material3.Button.OutlinedButton"><item name="strokeColor">@color/pos_orange</item><item name="android:textColor">@color/pos_orange_dark</item><item name="android:minHeight">48dp</item></style>
+    <style name="Widget.Mpos.Input" parent="Widget.Material3.TextInputEditText.FilledBox"><item name="android:textColor">@color/pos_text</item></style>
+</resources>

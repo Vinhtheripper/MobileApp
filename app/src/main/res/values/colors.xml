@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pos_orange">#F57C00</color>
+    <color name="pos_orange_dark">#E65100</color>
+    <color name="pos_orange_light">#FFF3E0</color>
+    <color name="pos_orange_secondary">#FFA726</color>
+    <color name="pos_success">#2E7D32</color>
+    <color name="pos_error">#D32F2F</color>
+    <color name="pos_warning">#FFB300</color>
+    <color name="pos_background">#FFF8F2</color>
+    <color name="pos_surface">#FFFFFFFF</color>
+    <color name="pos_border">#E5E7EB</color>
+    <color name="pos_text">#1F2937</color>
+    <color name="pos_text_secondary">#6B7280</color>
+    <color name="pos_success_light">#E8F5E9</color>
+    <color name="pos_error_light">#FFEBEE</color>
+</resources>

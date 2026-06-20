@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/pos_background" android:fitsSystemWindows="true" android:gravity="center" android:orientation="vertical" android:padding="28dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/bg_surface_card" android:orientation="vertical" android:padding="24dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="mPOS Pro" android:textColor="@color/pos_orange_dark" android:textSize="30sp" android:textStyle="bold"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Đăng nhập để bắt đầu bán hàng" android:textColor="@color/pos_text_secondary"/>
+        <EditText android:id="@+id/inputUsername" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="28dp" android:background="@drawable/bg_surface_card" android:hint="Tài khoản" android:paddingHorizontal="14dp" android:text="admin"/>
+        <EditText android:id="@+id/inputPassword" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="10dp" android:background="@drawable/bg_surface_card" android:hint="Mật khẩu" android:inputType="textPassword" android:paddingHorizontal="14dp" android:text="admin123"/>
+        <Button android:id="@+id/btnLogin" style="@style/Widget.Mpos.Button.Primary" android:layout_width="match_parent" android:layout_height="56dp" android:layout_marginTop="20dp" android:text="Đăng nhập"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="18dp" android:text="Tài khoản mẫu: admin / admin123" android:textColor="@color/pos_text_secondary" android:textSize="12sp"/>
+    </LinearLayout>
+</LinearLayout>
