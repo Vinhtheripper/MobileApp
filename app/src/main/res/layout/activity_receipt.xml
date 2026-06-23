@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/pos_background" android:fitsSystemWindows="true" android:gravity="center_horizontal" android:orientation="vertical" android:padding="20dp">
-    <Button android:id="@+id/btnBack" style="@style/Widget.Mpos.Button.Outline" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_gravity="start" android:minWidth="0dp" android:text="‹  Quay lại" />
-    <TextView android:id="@+id/txtReceipt" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="19sp" />
-</LinearLayout>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/app_background" android:fitsSystemWindows="true"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:orientation="vertical" android:padding="20dp">
+    <Button android:id="@+id/btnBack" style="@style/Widget.Mpos.Button.Outline" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_gravity="start" android:minWidth="0dp" android:text="‹  Quay lại"/>
+    <TextView android:layout_width="64dp" android:layout_height="64dp" android:layout_marginTop="24dp" android:background="@drawable/badge_success" android:gravity="center" android:text="✓" android:textColor="@color/status_success" android:textSize="34sp" android:textStyle="bold"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:text="Thanh toán thành công" android:textColor="@color/deep_navy_text" android:textSize="26sp" android:textStyle="bold"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Hóa đơn đã được lưu an toàn trên thiết bị" android:textColor="@color/text_secondary" android:textSize="13sp"/>
+    <TextView android:id="@+id/txtReceipt" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:background="@drawable/card_surface" android:padding="20dp" android:textColor="@color/text_primary" android:textSize="17sp" />
+    <Button android:id="@+id/btnNewSale" style="@style/Widget.Mpos.Button.Primary" android:layout_width="match_parent" android:layout_height="56dp" android:layout_marginTop="20dp" android:text="Tạo đơn mới"/>
+    <Button android:id="@+id/btnPrintReceipt" style="@style/Widget.Mpos.Button.Outline" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:text="In hóa đơn"/>
+    <Button android:id="@+id/btnShareReceipt" style="@style/Widget.Mpos.Button.Ghost" android:layout_width="match_parent" android:layout_height="52dp" android:text="Gửi hóa đơn"/>
+</LinearLayout></ScrollView>
