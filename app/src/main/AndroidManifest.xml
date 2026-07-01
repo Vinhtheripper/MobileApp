@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mpos">
         <activity android:name=".employee.AuditLogActivity" />
+        <activity android:name=".employee.UserFormActivity" />
+        <activity android:name=".employee.UserListActivity" />
+        <activity android:name=".fulfillment.FulfillmentActivity" />
         <activity android:name=".inventory.InventoryHistoryActivity" />
         <activity android:name=".shift.ShiftReportActivity" />
         <activity android:name=".cart.CartActivity" />
@@ -28,6 +31,7 @@
         <activity android:name=".customer.CustomerListActivity" />
         <activity android:name=".product.ProductFormActivity" />
         <activity android:name=".product.ProductListActivity" />
+        <activity android:name=".omnichannel.ChatImportActivity" />
         <activity android:name=".omnichannel.UnifiedInboxActivity" />
         <activity android:name=".sync.SyncStatusActivity" />
         <activity android:name=".shift.ShiftActivity" />

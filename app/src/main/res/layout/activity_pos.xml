@@ -1,1 +1,178 @@
-<?xml version="1.0" encoding="utf-8"?><FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/app_background" android:fitsSystemWindows="true"><LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:paddingHorizontal="@dimen/screen_gutter" android:paddingTop="16dp" android:paddingBottom="88dp"><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical"><Button android:id="@+id/btnBack" style="@style/Widget.Mpos.Button.Outline" android:layout_width="44dp" android:layout_height="44dp" android:text="‹"/><TextView style="@style/TextAppearance.Mpos.Title" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:text="Bán hàng"/><TextView android:id="@+id/txtCartSummary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/blue_primary_dark" android:textSize="12sp"/></LinearLayout><LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp"><EditText android:id="@+id/inputSearch" android:layout_width="0dp" android:layout_height="52dp" android:layout_weight="1" android:background="@drawable/bg_search_bar" android:hint="Tìm tên, SKU hoặc barcode" android:inputType="text" android:paddingHorizontal="16dp"/><Button android:id="@+id/btnSearch" style="@style/Widget.Mpos.Button.Outline" android:layout_width="52dp" android:layout_height="52dp" android:layout_marginStart="8dp" android:text="⌕"/></LinearLayout><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:background="@drawable/chip_selected" android:paddingHorizontal="14dp" android:paddingVertical="8dp" android:text="Tất cả sản phẩm" android:textColor="@color/blue_primary_dark"/><ListView android:id="@+id/listProducts" android:layout_width="match_parent" android:layout_height="0dp" android:layout_marginTop="10dp" android:layout_weight="1" android:divider="@android:color/transparent"/><Button android:id="@+id/btnCheckout" style="@style/Widget.Mpos.Button.Primary" android:layout_width="match_parent" android:layout_height="56dp" android:layout_marginTop="10dp" android:text="Thanh toán"/></LinearLayout><include android:layout_width="match_parent" android:layout_height="76dp" android:layout_gravity="bottom" layout="@layout/include_bottom_nav"/></FrameLayout>
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="84dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_top_bar"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp">
+
+            <TextView
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="←"
+                android:textColor="@color/surface"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:text="POS - Bán hàng"
+                android:textColor="@color/surface"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtCartSummary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#B8C2D6"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingTop="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/inputSearch"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_search_bar"
+                    android:hint="Tìm sản phẩm, SKU..."
+                    android:inputType="text"
+                    android:paddingHorizontal="14dp"
+                    android:singleLine="true"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/btnSearch"
+                    android:layout_width="54dp"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_action_blue"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:text="Tìm"
+                    android:textColor="@color/surface"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:background="@drawable/chip_selected"
+                        android:gravity="center"
+                        android:paddingHorizontal="14dp"
+                        android:text="Tất cả"
+                        android:textColor="@color/surface"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/chip_unselected"
+                        android:gravity="center"
+                        android:paddingHorizontal="14dp"
+                        android:text="Đồ uống"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/chip_unselected"
+                        android:gravity="center"
+                        android:paddingHorizontal="14dp"
+                        android:text="Đồ ăn"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/chip_unselected"
+                        android:gravity="center"
+                        android:paddingHorizontal="14dp"
+                        android:text="Combo"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listProducts"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:cacheColorHint="@android:color/transparent"
+            android:clipToPadding="false"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="8dp"
+            android:paddingBottom="8dp" />
+
+        <Button
+            android:id="@+id/btnCheckout"
+            style="@style/Widget.Mpos.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="4dp"
+            android:text="Xem giỏ và thanh toán" />
+    </LinearLayout>
+
+    <include
+        layout="@layout/include_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:layout_gravity="bottom" />
+</FrameLayout>

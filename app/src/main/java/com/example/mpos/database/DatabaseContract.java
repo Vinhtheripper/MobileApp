@@ -5,7 +5,7 @@ public final class DatabaseContract {
     private DatabaseContract() { }
 
     public static final String DATABASE_NAME = "mpos.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 4;
 
     public static final String USERS = "users";
     public static final String EMPLOYEES = "employees";
@@ -21,4 +21,5 @@ public final class DatabaseContract {
     public static final String SETTINGS = "settings";
     public static final String SYNC_QUEUE = "sync_queue";
     public static final String AUDIT_LOGS = "audit_logs";
+    public static final String SHIPMENTS = "shipments";
 }

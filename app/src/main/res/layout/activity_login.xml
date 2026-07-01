@@ -1,13 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/bg_app_gradient" android:fitsSystemWindows="true" android:gravity="center" android:orientation="vertical" android:padding="24dp">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/card_surface" android:elevation="4dp" android:orientation="vertical" android:padding="24dp">
-        <TextView android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/bg_hero_blue_gradient" android:gravity="center" android:text="M" android:textColor="@color/surface" android:textSize="22sp" android:textStyle="bold"/>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="18dp" android:text="Chào mừng trở lại" android:textColor="@color/blue_navy" android:textSize="28sp" android:textStyle="bold"/>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Offline-first POS cho cửa hàng hiện đại" android:textColor="@color/text_secondary"/>
-        <EditText android:id="@+id/inputUsername" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="26dp" android:background="@drawable/input_background" android:hint="Tài khoản" android:inputType="text" android:paddingHorizontal="16dp" android:text="admin"/>
-        <EditText android:id="@+id/inputPassword" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="12dp" android:background="@drawable/input_background" android:hint="Mật khẩu" android:inputType="textPassword" android:paddingHorizontal="16dp" android:text="admin123"/>
-        <TextView android:id="@+id/txtLoginError" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:background="@drawable/badge_error" android:padding="12dp" android:text="Sai tài khoản hoặc mật khẩu" android:textColor="@color/status_error" android:visibility="gone"/>
-        <Button android:id="@+id/btnLogin" style="@style/Widget.Mpos.Button.Primary" android:layout_width="match_parent" android:layout_height="56dp" android:layout_marginTop="22dp" android:text="Đăng nhập"/>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="18dp" android:text="Tài khoản mẫu: admin / admin123" android:textColor="@color/text_secondary" android:textSize="12sp"/>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/surface"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="620dp"
+        android:orientation="vertical"
+        android:padding="28dp">
+
+        <TextView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_logo_tile"
+            android:gravity="center"
+            android:text="POS"
+            android:textColor="@color/surface"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="mPOS Pro"
+            android:textColor="@color/deep_navy_text"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Đăng nhập để tiếp tục"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên đăng nhập"
+                android:textColor="@color/text_primary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/inputUsername"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_field_soft"
+                android:hint="Nhập email hoặc tài khoản"
+                android:inputType="text"
+                android:paddingHorizontal="14dp"
+                android:singleLine="true"
+                android:text="admin"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Mật khẩu"
+                android:textColor="@color/text_primary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/inputPassword"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_field_soft"
+                android:hint="Nhập mật khẩu"
+                android:inputType="textPassword"
+                android:paddingHorizontal="14dp"
+                android:singleLine="true"
+                android:text="admin123"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/txtLoginError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/badge_error"
+                android:padding="12dp"
+                android:text="Sai tài khoản hoặc mật khẩu"
+                android:textColor="@color/status_error"
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btnLogin"
+                style="@style/Widget.Mpos.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:text="Đăng nhập" />
+
+            <Button
+                style="@style/Widget.Mpos.Button.Outline"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:text="Đăng nhập offline" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="Chưa có tài khoản? Đăng ký ngay"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

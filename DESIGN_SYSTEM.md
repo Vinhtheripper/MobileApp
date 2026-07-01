@@ -2,18 +2,19 @@
 
 ## Moodboard
 
-Modern retail software: warm orange CTA, clean white surfaces, high-contrast money totals, generous touch targets, and compact operational information. The interface is deliberately utilitarian rather than social or decorative.
+Modern retail software: navy top bars, blue CTAs, clean white surfaces, high-contrast money totals, generous touch targets, and compact operational information. The interface is deliberately utilitarian rather than social or decorative.
 
 ## Token set
 
 | Token | Value | Usage |
 |---|---:|---|
-| Primary | `#F57C00` | Main POS action, selected state |
-| Dark primary | `#E65100` | Brand heading and emphasis |
-| Light primary | `#FFF3E0` | Selected filters and non-critical warnings |
-| Success | `#2E7D32` | Paid, synced, available |
-| Error | `#D32F2F` | Cancel, delete, failure |
-| Background | `#FFF8F2` | Screen background |
+| Primary | `#1677F2` | Main POS action, selected state |
+| Dark primary | `#0F5FCA` | Brand heading and emphasis |
+| Navy header | `#101B2D` | App bars and high-contrast navigation |
+| Light primary | `#EAF3FF` | Selected filters and informational surfaces |
+| Success | `#10A760` | Paid, synced, available |
+| Error | `#EF4444` | Cancel, delete, failure |
+| Background | `#F5F7FB` | Screen background |
 | Surface | `#FFFFFF` | Cards and panels |
 | Text | `#1F2937` | Primary information |
 
@@ -21,7 +22,7 @@ Modern retail software: warm orange CTA, clean white surfaces, high-contrast mon
 
 | Component | XML primitive | Rule |
 |---|---|---|
-| Primary CTA | `Widget.Mpos.Button.Primary` | Orange, minimum 52dp; use once per screen for the next irreversible action. |
+| Primary CTA | `Widget.Mpos.Button.Primary` | Blue, minimum 52dp; use once per screen for the next irreversible action. |
 | Success CTA | `Widget.Mpos.Button.Success` | Confirm completed payment only. |
 | Secondary action | `Widget.Mpos.Button.Outline` | Navigation and reversible actions. |
 | Card | `bg_surface_card` | White, 16dp radius, subtle border. |
@@ -36,6 +37,6 @@ Modern retail software: warm orange CTA, clean white surfaces, high-contrast mon
 
 ## Screen rollout
 
-Implemented visual baseline: Login, Dashboard, POS phone/tablet, Checkout, Receipt, Shift, Sync Status and Unified Inbox.
+Implemented visual baseline: Login, Dashboard, POS phone/tablet, Checkout, Receipt, Shift, Sync Status, Unified Inbox and management/detail screens.
 
 Use the same components for the remaining screens: Orders, Products, Customers, Inventory, Reports, Employees and Settings. Their first UI iteration should use list cards, search/filter chips, an empty state, then a detail/form screen; do not duplicate colors or ad-hoc button styles.

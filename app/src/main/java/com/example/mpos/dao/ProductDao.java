@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.mpos.database.DatabaseHelper;
+import com.example.mpos.constants.InventoryConstants;
 import com.example.mpos.model.Product;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class ProductDao {
             Cursor cursor = db.rawQuery("SELECT stock_quantity FROM products WHERE id=?", new String[]{String.valueOf(productId)});
             int before; try { if (!cursor.moveToFirst()) throw new IllegalArgumentException("Sản phẩm không tồn tại"); before = cursor.getInt(0); } finally { cursor.close(); }
             ContentValues product = new ContentValues(); product.put("stock_quantity", newQuantity); product.put("updated_at", System.currentTimeMillis()); db.update("products", product, "id=?", new String[]{String.valueOf(productId)});
-            ContentValues movement = new ContentValues(); movement.put("product_id", productId); movement.put("user_id", userId); movement.put("transaction_type", "ADJUSTMENT"); movement.put("quantity_change", newQuantity - before); movement.put("quantity_before", before); movement.put("quantity_after", newQuantity); movement.put("note", note); movement.put("created_at", System.currentTimeMillis()); db.insertOrThrow("inventory_transactions", null, movement);
+            ContentValues movement = new ContentValues(); movement.put("product_id", productId); movement.put("user_id", userId); movement.put("transaction_type", InventoryConstants.TYPE_STOCK_ADJUST); movement.put("quantity_change", newQuantity - before); movement.put("quantity_before", before); movement.put("quantity_after", newQuantity); movement.put("note", note); movement.put("created_at", System.currentTimeMillis()); db.insertOrThrow("inventory_transactions", null, movement);
             db.setTransactionSuccessful();
         } finally { db.endTransaction(); }
     }

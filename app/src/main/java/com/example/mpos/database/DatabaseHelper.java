@@ -20,18 +20,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE employees (id INTEGER PRIMARY KEY AUTOINCREMENT, employee_code TEXT UNIQUE, full_name TEXT NOT NULL, phone TEXT, email TEXT, position TEXT, is_active INTEGER NOT NULL DEFAULT 1, created_at INTEGER, updated_at INTEGER)");
         db.execSQL("CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, employee_id INTEGER, role TEXT NOT NULL, is_active INTEGER NOT NULL DEFAULT 1, created_at INTEGER, updated_at INTEGER, FOREIGN KEY(employee_id) REFERENCES employees(id))");
-        db.execSQL("CREATE TABLE categories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, description TEXT, is_active INTEGER NOT NULL DEFAULT 1, created_at INTEGER, updated_at INTEGER)");
-        db.execSQL("CREATE TABLE products (id INTEGER PRIMARY KEY AUTOINCREMENT, barcode TEXT UNIQUE, sku TEXT UNIQUE, name TEXT NOT NULL, category_id INTEGER, cost_price INTEGER NOT NULL DEFAULT 0, sale_price INTEGER NOT NULL, stock_quantity INTEGER NOT NULL DEFAULT 0, min_stock_quantity INTEGER NOT NULL DEFAULT 0, image_uri TEXT, is_active INTEGER NOT NULL DEFAULT 1, created_at INTEGER, updated_at INTEGER, FOREIGN KEY(category_id) REFERENCES categories(id))");
-        db.execSQL("CREATE TABLE customers (id INTEGER PRIMARY KEY AUTOINCREMENT, phone TEXT UNIQUE NOT NULL, full_name TEXT, email TEXT, address TEXT, loyalty_points INTEGER NOT NULL DEFAULT 0, created_at INTEGER, updated_at INTEGER)");
+        db.execSQL("CREATE TABLE categories (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, description TEXT, icon TEXT, color TEXT, is_active INTEGER NOT NULL DEFAULT 1, created_at INTEGER, updated_at INTEGER)");
+        db.execSQL("CREATE TABLE products (id INTEGER PRIMARY KEY AUTOINCREMENT, barcode TEXT UNIQUE, sku TEXT UNIQUE, name TEXT NOT NULL, category_id INTEGER, cost_price INTEGER NOT NULL DEFAULT 0, sale_price INTEGER NOT NULL, vat_rate REAL NOT NULL DEFAULT 0, stock_quantity INTEGER NOT NULL DEFAULT 0, min_stock_quantity INTEGER NOT NULL DEFAULT 0, image_uri TEXT, is_active INTEGER NOT NULL DEFAULT 1, created_at INTEGER, updated_at INTEGER, FOREIGN KEY(category_id) REFERENCES categories(id))");
+        db.execSQL("CREATE TABLE customers (id INTEGER PRIMARY KEY AUTOINCREMENT, phone TEXT UNIQUE NOT NULL, full_name TEXT, email TEXT, address TEXT, source_tags TEXT, total_spent INTEGER NOT NULL DEFAULT 0, total_orders INTEGER NOT NULL DEFAULT 0, loyalty_points INTEGER NOT NULL DEFAULT 0, created_at INTEGER, updated_at INTEGER)");
         db.execSQL("CREATE TABLE shifts (id INTEGER PRIMARY KEY AUTOINCREMENT, shift_code TEXT UNIQUE NOT NULL, user_id INTEGER NOT NULL, opened_at INTEGER NOT NULL, closed_at INTEGER, opening_cash INTEGER NOT NULL, expected_cash INTEGER DEFAULT 0, actual_cash INTEGER, difference_amount INTEGER, status TEXT NOT NULL, handover_note TEXT, FOREIGN KEY(user_id) REFERENCES users(id))");
-        db.execSQL("CREATE TABLE orders (id INTEGER PRIMARY KEY AUTOINCREMENT, order_code TEXT UNIQUE NOT NULL, customer_id INTEGER, user_id INTEGER NOT NULL, shift_id INTEGER, channel TEXT NOT NULL DEFAULT 'WALK_IN', status TEXT NOT NULL, subtotal INTEGER NOT NULL, discount_amount INTEGER NOT NULL DEFAULT 0, vat_percent INTEGER NOT NULL DEFAULT 0, vat_amount INTEGER NOT NULL DEFAULT 0, total_amount INTEGER NOT NULL, note TEXT, created_at INTEGER, updated_at INTEGER, FOREIGN KEY(customer_id) REFERENCES customers(id), FOREIGN KEY(user_id) REFERENCES users(id), FOREIGN KEY(shift_id) REFERENCES shifts(id))");
-        db.execSQL("CREATE TABLE order_items (id INTEGER PRIMARY KEY AUTOINCREMENT, order_id INTEGER NOT NULL, product_id INTEGER NOT NULL, product_name TEXT NOT NULL, unit_price INTEGER NOT NULL, quantity INTEGER NOT NULL, discount_amount INTEGER NOT NULL DEFAULT 0, line_total INTEGER NOT NULL, FOREIGN KEY(order_id) REFERENCES orders(id), FOREIGN KEY(product_id) REFERENCES products(id))");
+        db.execSQL("CREATE TABLE orders (id INTEGER PRIMARY KEY AUTOINCREMENT, order_code TEXT UNIQUE NOT NULL, customer_id INTEGER, user_id INTEGER NOT NULL, shift_id INTEGER, channel TEXT NOT NULL DEFAULT 'WALK_IN', status TEXT NOT NULL, subtotal INTEGER NOT NULL DEFAULT 0, discount_amount INTEGER NOT NULL DEFAULT 0, vat_percent INTEGER NOT NULL DEFAULT 0, vat_amount INTEGER NOT NULL DEFAULT 0, shipping_fee INTEGER NOT NULL DEFAULT 0, total_amount INTEGER NOT NULL DEFAULT 0, delivery_address TEXT, sync_status TEXT NOT NULL DEFAULT 'PENDING', note TEXT, created_at INTEGER, updated_at INTEGER, FOREIGN KEY(customer_id) REFERENCES customers(id), FOREIGN KEY(user_id) REFERENCES users(id), FOREIGN KEY(shift_id) REFERENCES shifts(id))");
+        db.execSQL("CREATE TABLE order_items (id INTEGER PRIMARY KEY AUTOINCREMENT, order_id INTEGER NOT NULL, product_id INTEGER NOT NULL, product_name TEXT NOT NULL, unit_price INTEGER NOT NULL, quantity INTEGER NOT NULL, discount_amount INTEGER NOT NULL DEFAULT 0, discount_rate REAL NOT NULL DEFAULT 0, vat_rate REAL NOT NULL DEFAULT 0, line_total INTEGER NOT NULL, FOREIGN KEY(order_id) REFERENCES orders(id), FOREIGN KEY(product_id) REFERENCES products(id))");
         db.execSQL("CREATE TABLE payments (id INTEGER PRIMARY KEY AUTOINCREMENT, order_id INTEGER NOT NULL, method TEXT NOT NULL, amount INTEGER NOT NULL, status TEXT NOT NULL, transaction_code TEXT, paid_at INTEGER, note TEXT, FOREIGN KEY(order_id) REFERENCES orders(id))");
         db.execSQL("CREATE TABLE inventory_transactions (id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER NOT NULL, user_id INTEGER, order_id INTEGER, transaction_type TEXT NOT NULL, quantity_change INTEGER NOT NULL, quantity_before INTEGER NOT NULL, quantity_after INTEGER NOT NULL, note TEXT, created_at INTEGER, FOREIGN KEY(product_id) REFERENCES products(id), FOREIGN KEY(user_id) REFERENCES users(id), FOREIGN KEY(order_id) REFERENCES orders(id))");
         db.execSQL("CREATE TABLE receipts (id INTEGER PRIMARY KEY AUTOINCREMENT, order_id INTEGER UNIQUE NOT NULL, receipt_number TEXT UNIQUE NOT NULL, content TEXT, printed_at INTEGER, shared_at INTEGER, created_at INTEGER, FOREIGN KEY(order_id) REFERENCES orders(id))");
         db.execSQL("CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, setting_key TEXT UNIQUE NOT NULL, setting_value TEXT, updated_at INTEGER)");
-        db.execSQL("CREATE TABLE sync_queue (id INTEGER PRIMARY KEY AUTOINCREMENT, entity_type TEXT NOT NULL, entity_id INTEGER NOT NULL, action_type TEXT NOT NULL, payload TEXT, status TEXT NOT NULL DEFAULT 'PENDING', retry_count INTEGER NOT NULL DEFAULT 0, last_error TEXT, created_at INTEGER, updated_at INTEGER)");
+        db.execSQL("CREATE TABLE sync_queue (id INTEGER PRIMARY KEY AUTOINCREMENT, event_type TEXT NOT NULL DEFAULT 'ORDER_CREATE', entity_type TEXT NOT NULL, entity_id INTEGER NOT NULL, action_type TEXT NOT NULL, payload TEXT, status TEXT NOT NULL DEFAULT 'PENDING', retry_count INTEGER NOT NULL DEFAULT 0, last_error TEXT, created_at INTEGER, updated_at INTEGER)");
         db.execSQL("CREATE TABLE audit_logs (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, action TEXT NOT NULL, entity_type TEXT NOT NULL, entity_id INTEGER, detail TEXT, created_at INTEGER NOT NULL, FOREIGN KEY(user_id) REFERENCES users(id))");
+        createShipmentTable(db);
         db.execSQL("CREATE INDEX idx_products_name ON products(name)");
         db.execSQL("CREATE INDEX idx_orders_created_at ON orders(created_at)");
         db.execSQL("CREATE INDEX idx_order_items_order_id ON order_items(order_id)");
@@ -44,7 +45,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 2) {
             db.execSQL("CREATE TABLE IF NOT EXISTS audit_logs (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, action TEXT NOT NULL, entity_type TEXT NOT NULL, entity_id INTEGER, detail TEXT, created_at INTEGER NOT NULL, FOREIGN KEY(user_id) REFERENCES users(id))");
             db.execSQL("CREATE INDEX IF NOT EXISTS idx_sync_queue_status ON sync_queue(status)");
-            DatabaseSeeder.seed(db);
+        }
+        if (oldVersion < 3) migrateToV3(db);
+        if (oldVersion < 4) migrateToV4(db);
+        DatabaseSeeder.seed(db);
+    }
+
+    private void migrateToV3(SQLiteDatabase db) {
+        addColumn(db, "categories", "icon TEXT");
+        addColumn(db, "categories", "color TEXT");
+        addColumn(db, "products", "vat_rate REAL NOT NULL DEFAULT 0");
+        addColumn(db, "customers", "source_tags TEXT");
+        addColumn(db, "customers", "total_spent INTEGER NOT NULL DEFAULT 0");
+        addColumn(db, "customers", "total_orders INTEGER NOT NULL DEFAULT 0");
+        addColumn(db, "orders", "shipping_fee INTEGER NOT NULL DEFAULT 0");
+        addColumn(db, "orders", "delivery_address TEXT");
+        addColumn(db, "orders", "sync_status TEXT NOT NULL DEFAULT 'PENDING'");
+        addColumn(db, "order_items", "discount_rate REAL NOT NULL DEFAULT 0");
+        addColumn(db, "order_items", "vat_rate REAL NOT NULL DEFAULT 0");
+        addColumn(db, "sync_queue", "event_type TEXT NOT NULL DEFAULT 'ORDER_CREATE'");
+        createShipmentTable(db);
+    }
+
+    private void createShipmentTable(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS shipments (id INTEGER PRIMARY KEY AUTOINCREMENT, order_id INTEGER NOT NULL, provider TEXT NOT NULL, tracking_code TEXT, fee INTEGER NOT NULL DEFAULT 0, status TEXT NOT NULL, created_at INTEGER NOT NULL, updated_at INTEGER, FOREIGN KEY(order_id) REFERENCES orders(id))");
+    }
+
+    private void migrateToV4(SQLiteDatabase db) {
+        db.execSQL("UPDATE users SET role='STAFF', updated_at=strftime('%s','now') * 1000 WHERE role='MANAGER'");
+    }
+
+    private void addColumn(SQLiteDatabase db, String table, String columnDefinition) {
+        try {
+            db.execSQL("ALTER TABLE " + table + " ADD COLUMN " + columnDefinition);
+        } catch (android.database.SQLException ignored) {
+            // Column already exists on upgraded/dev databases.
         }
     }
 }

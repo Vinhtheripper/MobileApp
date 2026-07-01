@@ -1,18 +1,276 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/app_background" android:fitsSystemWindows="true">
- <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:clipToPadding="false" android:paddingBottom="100dp">
-  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="@dimen/screen_gutter" android:paddingTop="20dp" android:paddingBottom="24dp">
-   <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical"><LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Trang chủ" android:textColor="@color/deep_navy_text" android:textSize="28sp" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Bán hàng, quản lý ca và xử lý đơn nhanh hơn" android:textColor="@color/text_secondary" android:textSize="13sp"/></LinearLayout><Button android:id="@+id/btnProfile" style="@style/Widget.Mpos.Button.Outline" android:layout_width="48dp" android:layout_height="48dp" android:minWidth="0dp" android:text="A"/></LinearLayout>
-   <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:background="@drawable/bg_hero_blue_gradient" android:orientation="vertical" android:padding="20dp"><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CHƯA MỞ CA" android:textColor="#C8DDF8" android:textSize="12sp" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Sẵn sàng bắt đầu bán hàng" android:textColor="@color/surface" android:textSize="22sp" android:textStyle="bold"/><TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Mở ca để xác nhận thanh toán hôm nay" android:textColor="#C8DDF8"/><Button android:id="@+id/btnShift" style="@style/Widget.Mpos.Button.Outline" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginTop="14dp" android:text="Mở ca ngay"/></LinearLayout>
-   <Button android:id="@+id/btnNewSale" style="@style/Widget.Mpos.Button.Primary" android:layout_width="match_parent" android:layout_height="56dp" android:layout_marginTop="16dp" android:text="Tạo đơn mới"/>
-   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="Tiện ích bán hàng" android:textColor="@color/deep_navy_text" android:textSize="20sp" android:textStyle="bold"/>
-   <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="horizontal"><Button android:id="@+id/btnOrders" style="@style/Widget.Mpos.Button.Outline" android:layout_width="0dp" android:layout_height="72dp" android:layout_marginEnd="6dp" android:layout_weight="1" android:text="Đơn hàng"/><Button android:id="@+id/btnProducts" style="@style/Widget.Mpos.Button.Outline" android:layout_width="0dp" android:layout_height="72dp" android:layout_marginStart="6dp" android:layout_weight="1" android:text="Sản phẩm"/></LinearLayout>
-   <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="horizontal"><Button android:id="@+id/btnCustomers" style="@style/Widget.Mpos.Button.Outline" android:layout_width="0dp" android:layout_height="72dp" android:layout_marginEnd="6dp" android:layout_weight="1" android:text="Khách hàng"/><Button android:id="@+id/btnInventory" style="@style/Widget.Mpos.Button.Outline" android:layout_width="0dp" android:layout_height="72dp" android:layout_marginStart="6dp" android:layout_weight="1" android:text="Tồn kho"/></LinearLayout>
-   <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="horizontal"><Button android:id="@+id/btnReports" style="@style/Widget.Mpos.Button.Outline" android:layout_width="0dp" android:layout_height="60dp" android:layout_marginEnd="6dp" android:layout_weight="1" android:text="Báo cáo"/><Button android:id="@+id/btnInbox" style="@style/Widget.Mpos.Button.Outline" android:layout_width="0dp" android:layout_height="60dp" android:layout_marginStart="6dp" android:layout_weight="1" android:text="Unified Inbox"/></LinearLayout>
-   <Button android:id="@+id/btnSync" style="@style/Widget.Mpos.Button.Outline" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="16dp" android:text="Đồng bộ dữ liệu"/>
-   <Button android:id="@+id/btnMore" style="@style/Widget.Mpos.Button.Outline" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="8dp" android:text="Thêm tiện ích"/>
-   <Button android:id="@+id/btnLogout" style="@style/Widget.Mpos.Button.Ghost" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:text="Đăng xuất" android:textColor="@color/status_error"/>
-  </LinearLayout>
- </ScrollView>
- <include android:layout_width="match_parent" android:layout_height="76dp" android:layout_gravity="bottom" layout="@layout/include_bottom_nav"/>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    android:fitsSystemWindows="true">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="96dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_top_bar"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp">
+
+                <TextView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_logo_tile"
+                    android:gravity="center"
+                    android:text="POS"
+                    android:textColor="@color/surface"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Xin chào, A Thịnh"
+                        android:textColor="@color/surface"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hôm nay bán tốt nhé"
+                        android:textColor="#B8C2D6"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnProfile"
+                    style="@style/Widget.Mpos.Button.Ghost"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:minWidth="0dp"
+                    android:text="A"
+                    android:textColor="@color/surface" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="18dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/card_surface"
+                    android:elevation="1dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Doanh thu hôm nay"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="12.500.000 đ"
+                        android:textColor="@color/deep_navy_text"
+                        android:textSize="26sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="+8.2% so với hôm qua"
+                        android:textColor="@color/status_success"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="74dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/bg_field_soft"
+                        android:gravity="center"
+                        android:text="╱╲╱╲╲╱╲"
+                        android:textColor="@color/blue_primary"
+                        android:textSize="28sp" />
+                </LinearLayout>
+
+                <TextView
+                    style="@style/TextAppearance.Mpos.Section"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="Thao tác nhanh" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnNewSale"
+                        style="@style/Widget.Mpos.Button.Primary"
+                        android:layout_width="0dp"
+                        android:layout_height="66dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:text="+\nTạo đơn mới" />
+
+                    <Button
+                        android:id="@+id/btnProducts"
+                        style="@style/Widget.Mpos.Button.Outline"
+                        android:layout_width="0dp"
+                        android:layout_height="66dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:text="▦\nSản phẩm" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnShift"
+                        style="@style/Widget.Mpos.Button.Outline"
+                        android:layout_width="0dp"
+                        android:layout_height="66dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:text="↕\nMở ca" />
+
+                    <Button
+                        android:id="@+id/btnCustomers"
+                        style="@style/Widget.Mpos.Button.Outline"
+                        android:layout_width="0dp"
+                        android:layout_height="66dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:text="◎\nKhách hàng" />
+                </LinearLayout>
+
+                <TextView
+                    style="@style/TextAppearance.Mpos.Section"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="Đơn gần đây" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/card_surface"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="#1025 - Nguyễn Thị Hoa"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="3 món • 240.000 đ • Đã thanh toán"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnOrders"
+                    style="@style/Widget.Mpos.Button.Outline"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Xem lịch sử đơn hàng" />
+
+                <Button
+                    android:id="@+id/btnInventory"
+                    style="@style/Widget.Mpos.Button.Outline"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Quản lý tồn kho" />
+
+                <Button
+                    android:id="@+id/btnReports"
+                    style="@style/Widget.Mpos.Button.Outline"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Channel Analytics" />
+
+                <Button
+                    android:id="@+id/btnInbox"
+                    style="@style/Widget.Mpos.Button.Outline"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Hộp thư bán hàng" />
+
+                <Button
+                    android:id="@+id/btnSync"
+                    style="@style/Widget.Mpos.Button.Outline"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Đồng bộ dữ liệu" />
+
+                <Button
+                    android:id="@+id/btnMore"
+                    style="@style/Widget.Mpos.Button.Outline"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Thêm tiện ích" />
+
+                <Button
+                    android:id="@+id/btnLogout"
+                    style="@style/Widget.Mpos.Button.Ghost"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Đăng xuất"
+                    android:textColor="@color/status_error" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <include
+        layout="@layout/include_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:layout_gravity="bottom" />
 </FrameLayout>
