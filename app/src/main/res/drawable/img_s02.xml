@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#FFF8E1"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Croissant body - main shape -->
+    <path android:fillColor="#FFB300"
+        android:pathData="M20,80 Q15,55 35,40 Q50,28 65,35 Q80,42 85,60 Q95,45 105,52 Q110,65 100,75 Q90,82 80,78 Q70,75 65,65 Q60,80 50,85 Q35,90 20,80 Z"/>
+    <!-- Left horn -->
+    <path android:fillColor="#FF8F00"
+        android:pathData="M20,80 Q10,70 15,55 Q18,45 28,42 Q15,55 20,80"/>
+    <!-- Right horn -->
+    <path android:fillColor="#FF8F00"
+        android:pathData="M105,52 Q115,55 110,70 Q105,82 95,85 Q108,72 105,52"/>
+    <!-- Layers/lamination lines -->
+    <path android:fillColor="#00000000" android:strokeColor="#E65100" android:strokeWidth="2"
+        android:pathData="M35,48 Q50,40 65,48 Q75,55 80,65"/>
+    <path android:fillColor="#00000000" android:strokeColor="#E65100" android:strokeWidth="1.5"
+        android:pathData="M30,58 Q45,50 60,58 Q70,65 75,75"/>
+    <path android:fillColor="#00000000" android:strokeColor="#E65100" android:strokeWidth="1"
+        android:pathData="M28,68 Q42,62 56,68 Q65,74 68,82"/>
+    <!-- Glossy highlight -->
+    <path android:fillColor="#FFD54F" android:fillAlpha="120"
+        android:pathData="M40,42 Q55,35 68,42 Q55,40 40,42"/>
+    <!-- Butter drip -->
+    <path android:fillColor="#FFEE58"
+        android:pathData="M50,82 Q52,88 55,85 Q58,82 56,78 Q53,80 50,82"/>
+</vector>

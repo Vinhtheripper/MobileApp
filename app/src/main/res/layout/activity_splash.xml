@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    SPLASH SCREEN — Quầy mPOS Pro
+    Enhanced loading with mascot bounce + glow ring pulse + sequential dots
+    Background: topographic wave blue
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_login_topographic"
+    android:fitsSystemWindows="true">
+
+    <!-- Centered content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- ── MASCOT with glow ring ── -->
+        <FrameLayout
+            android:id="@+id/mascotContainer"
+            android:layout_width="160dp"
+            android:layout_height="160dp">
+
+            <!-- Outer glow ring (pulsing) -->
+            <View
+                android:id="@+id/glowRingOuter"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_splash_glow_outer"
+                android:alpha="0"/>
+
+            <!-- Inner glow ring -->
+            <View
+                android:id="@+id/glowRingInner"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_mascot_glow_ring"
+                android:alpha="0"/>
+
+            <!-- Mascot image — bounce animation -->
+            <ImageView
+                android:id="@+id/imgMascot"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_mascot_png"
+                android:scaleType="fitCenter"
+                android:contentDescription="Quầy mascot"
+                android:alpha="0"/>
+        </FrameLayout>
+
+        <!-- Brand name — Montserrat Bold -->
+        <TextView
+            android:id="@+id/txtBrandName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Quầy"
+            android:textColor="#FFFFFF"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:letterSpacing="-0.03"
+            android:fontFamily="sans-serif"
+            android:alpha="0"/>
+
+        <!-- Tagline -->
+        <TextView
+            android:id="@+id/txtTagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Bán hàng mọi lúc, mọi nơi"
+            android:textColor="#C3D7FC"
+            android:textSize="15sp"
+            android:letterSpacing="0.02"
+            android:alpha="0"/>
+
+        <!-- ── LOADING INDICATOR ── sequential dot animation -->
+        <LinearLayout
+            android:id="@+id/layoutDots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:alpha="0">
+
+            <View
+                android:id="@+id/dot1"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_dot_loading"/>
+            <View
+                android:id="@+id/dot2"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_dot_loading"/>
+            <View
+                android:id="@+id/dot3"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:background="@drawable/bg_dot_loading"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Version badge bottom -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="32dp"
+        android:text="mPOS Pro v1.0"
+        android:textColor="#6080C8"
+        android:textSize="11sp"
+        android:letterSpacing="0.05"/>
+
+</FrameLayout>

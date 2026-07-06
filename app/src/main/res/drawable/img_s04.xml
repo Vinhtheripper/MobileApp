@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#FFF8E1"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Ramekin dish -->
+    <path android:fillColor="#EFEBE9"
+        android:pathData="M20,60 Q20,105 60,108 Q100,105 100,60 Q60,64 20,60 Z"/>
+    <path android:fillColor="#D7CCC8"
+        android:pathData="M18,56 Q18,52 60,50 Q102,52 102,56 L102,62 Q60,64 18,62 Z"/>
+    <!-- Caramel sauce -->
+    <path android:fillColor="#FF8F00"
+        android:pathData="M25,60 Q25,65 60,65 Q95,65 95,60 Q60,64 25,60"/>
+    <path android:fillColor="#FF6F00"
+        android:pathData="M26,61 Q60,68 94,61 Q90,65 60,67 Q30,65 26,61"/>
+    <!-- Flan (custard) surface -->
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M23,56 Q23,42 60,38 Q97,42 97,56 Q60,60 23,56 Z"/>
+    <!-- Surface highlight -->
+    <path android:fillColor="#FFFDE7" android:fillAlpha="180"
+        android:pathData="M30,44 Q60,40 90,44 Q60,42 30,44"/>
+    <!-- Wobble effect lines -->
+    <path android:fillColor="#00000000" android:strokeColor="#FFF176" android:strokeWidth="1.5"
+        android:pathData="M35,52 Q60,48 85,52"/>
+    <!-- Caramel drip down sides -->
+    <path android:fillColor="#FF8F00"
+        android:pathData="M24,56 Q22,65 24,80 Q22,65 24,56"/>
+    <path android:fillColor="#FF8F00"
+        android:pathData="M96,56 Q98,65 96,80 Q98,65 96,56"/>
+    <!-- Small mint garnish -->
+    <path android:fillColor="#4CAF50"
+        android:pathData="M56,36 Q60,30 64,36 Q60,38 56,36"/>
+</vector>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:background="@drawable/bg_bottom_nav"
+    android:elevation="8dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp">
+
+    <!-- Home (Active) -->
+    <LinearLayout android:id="@+id/navHome"
+        android:layout_width="0dp" android:layout_height="match_parent"
+        android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="40dp"
+            android:background="@drawable/bg_circle_blue" android:gravity="center"
+            android:orientation="vertical" android:paddingStart="14dp" android:paddingEnd="14dp">
+            <ImageView android:layout_width="18dp" android:layout_height="18dp"
+                android:src="@drawable/ic_home" android:tint="#FFFFFF"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Trang chủ" android:textColor="#FFFFFF" android:textSize="8sp"
+                android:layout_marginTop="1dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- POS -->
+    <LinearLayout android:id="@+id/navPos"
+        android:layout_width="0dp" android:layout_height="match_parent"
+        android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+        <ImageView android:layout_width="22dp" android:layout_height="22dp"
+            android:src="@drawable/ic_pos" android:tint="#6B7280"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="3dp" android:text="Bán hàng"
+            android:textColor="#6B7280" android:textSize="9sp"/>
+    </LinearLayout>
+
+    <!-- Orders -->
+    <LinearLayout android:id="@+id/navOrders"
+        android:layout_width="0dp" android:layout_height="match_parent"
+        android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+        <ImageView android:layout_width="22dp" android:layout_height="22dp"
+            android:src="@drawable/ic_orders" android:tint="#6B7280"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="3dp" android:text="Đơn hàng"
+            android:textColor="#6B7280" android:textSize="9sp"/>
+    </LinearLayout>
+
+    <!-- Products -->
+    <LinearLayout android:id="@+id/navProducts"
+        android:layout_width="0dp" android:layout_height="match_parent"
+        android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+        <ImageView android:layout_width="22dp" android:layout_height="22dp"
+            android:src="@drawable/ic_inventory" android:tint="#6B7280"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="3dp" android:text="Sản phẩm"
+            android:textColor="#6B7280" android:textSize="9sp"/>
+    </LinearLayout>
+
+    <!-- More -->
+    <LinearLayout android:id="@+id/navMore"
+        android:layout_width="0dp" android:layout_height="match_parent"
+        android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+        <ImageView android:layout_width="22dp" android:layout_height="22dp"
+            android:src="@drawable/ic_more_vert" android:tint="#6B7280"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="3dp" android:text="Thêm"
+            android:textColor="#6B7280" android:textSize="9sp"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#F3F0EC"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Glass body -->
+    <path android:fillColor="#B3E5FC" android:fillAlpha="120"
+        android:pathData="M38,30 L34,95 Q34,100 40,100 L80,100 Q86,100 86,95 L82,30 Z"/>
+    <!-- Ice coffee layer -->
+    <path android:fillColor="#3E2723"
+        android:pathData="M39,30 L38,50 L82,50 L81,30 Z"/>
+    <!-- Milk cloud -->
+    <path android:fillColor="#F5F5F5" android:fillAlpha="200"
+        android:pathData="M40,50 Q60,44 80,50 L80,58 Q60,62 40,58 Z"/>
+    <!-- Ice cubes -->
+    <path android:fillColor="#FFFFFF" android:fillAlpha="180"
+        android:pathData="M43,65 L43,78 L53,78 L53,65 Z"/>
+    <path android:fillColor="#FFFFFF" android:fillAlpha="180"
+        android:pathData="M57,68 L57,80 L67,80 L67,68 Z"/>
+    <path android:fillColor="#FFFFFF" android:fillAlpha="180"
+        android:pathData="M70,63 L70,76 L80,76 L80,63 Z"/>
+    <!-- Glass rim -->
+    <path android:fillColor="#90CAF9" android:fillAlpha="180"
+        android:pathData="M36,26 Q36,22 60,22 Q84,22 84,26 L84,32 Q84,36 60,36 Q36,36 36,32 Z"/>
+    <!-- Straw -->
+    <path android:fillColor="#00000000" android:strokeColor="#F48FB1" android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:pathData="M74,22 L70,5"/>
+    <!-- Saucer -->
+    <path android:fillColor="#BDBDBD"
+        android:pathData="M26,102 Q26,108 60,108 Q94,108 94,102 L94,100 Q94,98 60,98 Q26,98 26,100 Z"/>
+</vector>

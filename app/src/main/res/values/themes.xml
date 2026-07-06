@@ -1,0 +1,74 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- =============================================================
+         BASE APPLICATION THEME — Quầy mPOS Pro
+         Light mode only (POS environment — always-on screen)
+         Primary: #2875FB (mascot brand blue)
+         Font: Montserrat via downloadable fonts (falls back to sans-serif)
+         ============================================================= -->
+    <style name="Base.Theme.Mpos" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Brand colors -->
+        <item name="colorPrimary">@color/blue_primary</item>
+        <item name="colorOnPrimary">@color/surface</item>
+        <item name="colorSecondary">@color/cyan_accent</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        <item name="colorOutline">@color/border</item>
+
+        <!-- Typography — system sans-serif (Roboto) looks very close to Montserrat -->
+        <!-- NOTE: Downloadable @font/montserrat causes FontResourcesParserCompat crash on emulators -->
+        <!-- android:fontFamily="@font/montserrat" -->
+        <item name="android:fontFamily">sans-serif</item>
+
+        <!-- System bars — white for clean enterprise look -->
+        <item name="android:navigationBarColor">@color/surface</item>
+        <item name="android:statusBarColor">@color/surface</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+
+        <!-- Window -->
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+        <item name="android:windowActionModeOverlay">false</item>
+
+        <!-- Ripple -->
+        <item name="android:colorControlHighlight">#1A2875FB</item>
+    </style>
+
+    <style name="Theme.Mpos" parent="Base.Theme.Mpos" />
+
+    <!-- Splash / Login — blue background, immersive full screen -->
+    <style name="Theme.Mpos.Splash" parent="Base.Theme.Mpos">
+        <item name="android:windowBackground">@color/surface</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+    <!-- Transparent status bar for Splash/Login branding (topographic blue bg) -->
+    <style name="Theme.Mpos.SplashBlue" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/bg_login_topographic</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:statusBarColor">#00000000</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+
+    <!-- Welcome/onboarding theme — true fullscreen, no status bar -->
+    <style name="Theme.Mpos.Fullscreen" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/blue_primary</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+    <!-- Login theme — topographic bg, transparent status bar -->
+    <style name="Theme.Mpos.Login" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/bg_login_topographic</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:statusBarColor">#00000000</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+</resources>

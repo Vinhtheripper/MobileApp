@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- App icon foreground — logo Quầy tách nền, scale vừa với safe zone 72dp/108dp -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:top="14dp"
+        android:bottom="14dp"
+        android:left="8dp"
+        android:right="8dp">
+        <bitmap
+            android:src="@drawable/ic_logo"
+            android:gravity="center"
+            android:tileMode="disabled"/>
+    </item>
+</layer-list>

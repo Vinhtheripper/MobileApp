@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Login background fallback (XML gradient)
+    The actual bitmap is in drawable-nodpi/bg_login_topographic.png
+    Android resolves bitmap over XML when both exist in different qualifiers.
+    This XML acts as fallback if PNG is not found.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="linear"
+                android:angle="135"
+                android:startColor="#2040D0"
+                android:endColor="#1428A0"
+                android:centerColor="#1A35C0"/>
+        </shape>
+    </item>
+</layer-list>

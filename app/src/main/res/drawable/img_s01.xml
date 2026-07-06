@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#FFF3E0"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Cake base (sponge layers) -->
+    <path android:fillColor="#FFE0B2"
+        android:pathData="M15,75 L15,95 Q15,105 60,105 Q105,105 105,95 L105,75 Z"/>
+    <!-- Cream layer -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M13,70 L13,78 Q13,82 60,82 Q107,82 107,78 L107,70 Q107,66 60,66 Q13,66 13,70 Z"/>
+    <!-- Second sponge layer -->
+    <path android:fillColor="#FFCC80"
+        android:pathData="M15,55 L15,70 Q60,68 105,70 L105,55 Z"/>
+    <!-- Bottom cream -->
+    <path android:fillColor="#FFFFF0"
+        android:pathData="M15,52 L15,58 Q60,56 105,58 L105,52 Q60,50 15,52 Z"/>
+    <!-- First sponge -->
+    <path android:fillColor="#FFD180"
+        android:pathData="M18,40 L18,55 Q60,53 102,55 L102,40 Z"/>
+    <!-- Top frosting (tiramisu coffee color) -->
+    <path android:fillColor="#795548"
+        android:pathData="M16,36 Q16,28 60,26 Q104,28 104,36 L104,42 Q60,44 16,42 Z"/>
+    <!-- Cocoa powder dusting -->
+    <path android:fillColor="#5D4037" android:fillAlpha="180"
+        android:pathData="M25,30 Q60,26 95,30 Q60,28 25,30"/>
+    <!-- Ladyfinger garnish -->
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M35,22 L35,32 L45,32 L45,22 Z"/>
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M75,22 L75,32 L85,32 L85,22 Z"/>
+    <!-- Plate -->
+    <path android:fillColor="#F5F5F5"
+        android:pathData="M8,100 Q8,112 60,115 Q112,112 112,100 L112,105 Q112,115 60,118 Q8,115 8,105 Z"/>
+</vector>

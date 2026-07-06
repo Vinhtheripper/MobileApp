@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Egg carton base -->
+    <path android:fillColor="#FFF8E1"
+        android:pathData="M10,65 L10,105 Q10,112 20,112 L100,112 Q110,112 110,105 L110,65 Z"/>
+    <path android:fillColor="#F5F5F5"
+        android:pathData="M10,62 L10,68 Q10,72 60,72 Q110,72 110,68 L110,62 Q60,58 10,62 Z"/>
+    <!-- Egg carton lid pattern -->
+    <path android:fillColor="#EEEEEE"
+        android:pathData="M10,62 L10,45 Q10,38 60,36 Q110,38 110,45 L110,62 Q60,58 10,62 Z"/>
+    <!-- Carton bumps (egg impressions) -->
+    <path android:fillColor="#E0E0E0"
+        android:pathData="M22,48 m-8,0 a8,6 0 1,0 16,0 a8,6 0 1,0 -16,0"/>
+    <path android:fillColor="#E0E0E0"
+        android:pathData="M42,46 m-8,0 a8,6 0 1,0 16,0 a8,6 0 1,0 -16,0"/>
+    <path android:fillColor="#E0E0E0"
+        android:pathData="M60,45 m-8,0 a8,6 0 1,0 16,0 a8,6 0 1,0 -16,0"/>
+    <path android:fillColor="#E0E0E0"
+        android:pathData="M78,46 m-8,0 a8,6 0 1,0 16,0 a8,6 0 1,0 -16,0"/>
+    <path android:fillColor="#E0E0E0"
+        android:pathData="M98,48 m-8,0 a8,6 0 1,0 16,0 a8,6 0 1,0 -16,0"/>
+    <!-- Eggs visible in carton -->
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M22,82 m-10,0 a10,12 0 1,0 20,0 a10,12 0 1,0 -20,0"/>
+    <path android:fillColor="#FFFDE7" android:fillAlpha="150"
+        android:pathData="M18,76 m-5,0 a5,4 0 1,0 10,0 a5,4 0 1,0 -10,0"/>
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M42,80 m-10,0 a10,12 0 1,0 20,0 a10,12 0 1,0 -20,0"/>
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M60,79 m-10,0 a10,12 0 1,0 20,0 a10,12 0 1,0 -20,0"/>
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M78,80 m-10,0 a10,12 0 1,0 20,0 a10,12 0 1,0 -20,0"/>
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M98,82 m-10,0 a10,12 0 1,0 20,0 a10,12 0 1,0 -20,0"/>
+    <!-- Brand label on lid -->
+    <path android:fillColor="#FF8F00"
+        android:pathData="M30,38 L90,38 L90,44 L30,44 Z"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M38,40 L82,40 L82,42 L38,42 Z"/>
+</vector>

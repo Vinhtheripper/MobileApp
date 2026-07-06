@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    MASCOT PNG selector — points to mascot_happy.png for login/splash
+    Use in ImageView src="@drawable/ic_mascot_png"
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/mascot_happy"/>
+</selector>

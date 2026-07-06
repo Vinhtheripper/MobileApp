@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#FCF0FF"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Cup -->
+    <path android:fillColor="#CE93D8"
+        android:pathData="M32,35 L28,102 Q28,108 35,108 L85,108 Q92,108 92,102 L88,35 Z"/>
+    <!-- Tea layer -->
+    <path android:fillColor="#AB47BC" android:fillAlpha="180"
+        android:pathData="M33,35 L31,55 L89,55 L87,35 Z"/>
+    <!-- Milk layer -->
+    <path android:fillColor="#F8BBD9"
+        android:pathData="M31,55 L30,70 Q60,74 90,70 L89,55 Z"/>
+    <!-- Tapioca pearls -->
+    <path android:fillColor="#4A148C"
+        android:pathData="M42,80 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0"/>
+    <path android:fillColor="#4A148C"
+        android:pathData="M60,85 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0"/>
+    <path android:fillColor="#4A148C"
+        android:pathData="M78,80 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0"/>
+    <path android:fillColor="#4A148C"
+        android:pathData="M50,92 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0"/>
+    <path android:fillColor="#4A148C"
+        android:pathData="M70,93 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0"/>
+    <!-- Lid -->
+    <path android:fillColor="#9C27B0"
+        android:pathData="M29,30 Q29,24 60,24 Q91,24 91,30 L91,37 Q91,43 60,43 Q29,43 29,37 Z"/>
+    <!-- Straw -->
+    <path android:fillColor="#00000000" android:strokeColor="#FFFFFF" android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:pathData="M67,24 L63,5"/>
+    <!-- Straw stripes -->
+    <path android:fillColor="#00000000" android:strokeColor="#CE93D8" android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:pathData="M67,12 L63,12"/>
+</vector>

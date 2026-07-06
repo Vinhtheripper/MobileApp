@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mascot placeholder — blue rounded square with "Q" glyph
+     Used in loading, empty state, success, offline until actual mascot art is provided -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Body — soft rounded square in brand blue -->
+    <path
+        android:pathData="M20,36 Q20,20 36,20 L84,20 Q100,20 100,36 L100,84 Q100,100 84,100 L36,100 Q20,100 20,84 Z"
+        android:fillColor="#2875FB"/>
+
+    <!-- Inner white shape — slightly smaller rounded square for depth -->
+    <path
+        android:pathData="M26,38 Q26,26 38,26 L82,26 Q94,26 94,38 L94,82 Q94,94 82,94 L38,94 Q26,94 26,82 Z"
+        android:fillColor="#3D85FC"/>
+
+    <!-- Left ear -->
+    <path
+        android:pathData="M32,26 Q28,14 38,16 Q42,22 36,28 Z"
+        android:fillColor="#2875FB"/>
+
+    <!-- Right ear -->
+    <path
+        android:pathData="M88,26 Q92,14 82,16 Q78,22 84,28 Z"
+        android:fillColor="#2875FB"/>
+
+    <!-- Left eye white -->
+    <path
+        android:pathData="M45,50 m-10,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0"
+        android:fillColor="#FFFFFF"/>
+
+    <!-- Right eye white -->
+    <path
+        android:pathData="M75,50 m-10,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0"
+        android:fillColor="#FFFFFF"/>
+
+    <!-- Left pupil -->
+    <path
+        android:pathData="M45,50 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0"
+        android:fillColor="#030E50"/>
+
+    <!-- Right pupil -->
+    <path
+        android:pathData="M75,50 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0"
+        android:fillColor="#030E50"/>
+
+    <!-- Left pupil shine -->
+    <path
+        android:pathData="M42,47 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0"
+        android:fillColor="#FFFFFF"/>
+
+    <!-- Right pupil shine -->
+    <path
+        android:pathData="M72,47 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0"
+        android:fillColor="#FFFFFF"/>
+
+    <!-- Smile -->
+    <path
+        android:pathData="M48,70 Q60,80 72,70"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3"
+        android:fillColor="@android:color/transparent"
+        android:strokeLineCap="round"/>
+
+</vector>

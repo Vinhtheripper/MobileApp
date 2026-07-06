@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#E3F2FD"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Milk carton body -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M28,40 L28,105 Q28,110 35,110 L85,110 Q92,110 92,105 L92,40 Z"/>
+    <!-- Carton top fold -->
+    <path android:fillColor="#E3F2FD"
+        android:pathData="M28,40 L60,28 L92,40 L80,40 L60,32 L40,40 Z"/>
+    <path android:fillColor="#BBDEFB"
+        android:pathData="M40,40 L60,32 L60,40 Z"/>
+    <path android:fillColor="#90CAF9"
+        android:pathData="M60,32 L80,40 L60,40 Z"/>
+    <!-- Blue label band -->
+    <path android:fillColor="#1565C0"
+        android:pathData="M28,55 L92,55 L92,85 L28,85 Z"/>
+    <!-- Vinamilk logo area -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M36,60 L84,60 L84,80 L36,80 Z"/>
+    <!-- V logo shape -->
+    <path android:fillColor="#1565C0"
+        android:pathData="M44,64 L52,76 L60,64 L68,76 L76,64"/>
+    <!-- Text label hint -->
+    <path android:fillColor="#1565C0"
+        android:pathData="M38,66 L82,66 L82,68 L38,68 Z"/>
+    <!-- Cow icon simplified -->
+    <path android:fillColor="#212121"
+        android:pathData="M46,70 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0"/>
+    <!-- Bottom blue stripe -->
+    <path android:fillColor="#1976D2"
+        android:pathData="M28,88 L92,88 L92,98 L28,98 Z"/>
+    <!-- Nutrition panel (white strip) -->
+    <path android:fillColor="#F5F5F5"
+        android:pathData="M32,42 L32,54 L88,54 L88,42 Z"/>
+</vector>

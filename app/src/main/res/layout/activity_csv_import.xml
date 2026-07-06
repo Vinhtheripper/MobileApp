@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="@color/app_background">
+
+    <!-- App Bar -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="64dp"
+        android:background="@color/blue_navy" android:gravity="center_vertical"
+        android:orientation="horizontal" android:paddingHorizontal="16dp">
+        <Button android:id="@+id/btnBack"
+            style="@style/Widget.Mpos.Button.Ghost"
+            android:layout_width="40dp" android:layout_height="40dp"
+            android:minWidth="0dp" android:text="‹"
+            android:textColor="@color/surface" android:textSize="24sp"/>
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:layout_marginStart="8dp"
+            android:text="Nhập hàng loạt từ CSV"
+            android:textColor="@color/surface"
+            android:textSize="17sp" android:textStyle="bold"/>
+    </LinearLayout>
+
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:fillViewport="true">
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="16dp">
+
+            <!-- Instructions Card -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:background="@drawable/card_surface" android:orientation="vertical"
+                android:padding="16dp" android:layout_marginBottom="12dp">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Hướng dẫn" android:textColor="@color/text_primary"
+                    android:textSize="15sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="File CSV cần có các cột (theo thứ tự):"
+                    android:textColor="@color/text_secondary" android:textSize="13sp"/>
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="name, sku, barcode, sale_price, stock_quantity, min_stock_quantity, category, image_url"
+                    android:textColor="@color/blue_primary" android:textSize="11sp"
+                    android:fontFamily="monospace" android:background="@drawable/badge_blue"
+                    android:padding="8dp"/>
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="• Dòng đầu là tiêu đề (sẽ bỏ qua)\n• name và sku là bắt buộc, SKU phải duy nhất\n• Nếu SKU đã tồn tại, sản phẩm sẽ được cập nhật\n• category: tạo mới nếu chưa có\n• image_url: để trống nếu không có ảnh\n• Giá và tồn kho phải là số nguyên"
+                    android:textColor="@color/text_secondary" android:textSize="12sp"
+                    android:lineSpacingExtra="4dp"/>
+
+                <TextView android:id="@+id/btnDownloadTemplate"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="⬇ Tải file mẫu CSV"
+                    android:textColor="@color/blue_primary" android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="4dp"/>
+            </LinearLayout>
+
+            <!-- File Picker Card -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:background="@drawable/card_surface" android:orientation="vertical"
+                android:padding="16dp" android:layout_marginBottom="12dp">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Chọn file CSV" android:textColor="@color/text_primary"
+                    android:textSize="15sp" android:textStyle="bold" android:layout_marginBottom="12dp"/>
+
+                <LinearLayout android:id="@+id/layoutDropZone"
+                    android:layout_width="match_parent" android:layout_height="100dp"
+                    android:background="@drawable/chip_default"
+                    android:gravity="center" android:orientation="vertical"
+                    android:layout_marginBottom="12dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="📄" android:textSize="28sp"/>
+                    <TextView android:id="@+id/txtFileName"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Chưa chọn file" android:textColor="@color/text_secondary"
+                        android:textSize="13sp"/>
+                </LinearLayout>
+
+                <Button android:id="@+id/btnPickFile"
+                    style="@style/Widget.Mpos.Button.Outline"
+                    android:layout_width="match_parent" android:layout_height="44dp"
+                    android:text="Chọn file CSV từ thiết bị"/>
+            </LinearLayout>
+
+            <!-- Preview Card -->
+            <LinearLayout android:id="@+id/cardPreview"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:background="@drawable/card_surface" android:orientation="vertical"
+                android:padding="16dp" android:layout_marginBottom="12dp"
+                android:visibility="gone">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:layout_marginBottom="8dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Xem trước" android:textColor="@color/text_primary"
+                        android:textSize="15sp" android:textStyle="bold"/>
+                    <TextView android:id="@+id/txtRowCount"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="0 dòng"
+                        android:textColor="@color/text_secondary" android:textSize="13sp"/>
+                </LinearLayout>
+
+                <!-- Stats row -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:layout_marginBottom="12dp">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:background="@drawable/badge_success" android:padding="10dp"
+                        android:gravity="center" android:layout_marginEnd="6dp">
+                        <TextView android:id="@+id/txtValidCount"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="0" android:textColor="@color/status_success"
+                            android:textSize="20sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Mới" android:textColor="@color/status_success"
+                            android:textSize="11sp"/>
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:background="@drawable/badge_warning" android:padding="10dp"
+                        android:gravity="center" android:layout_marginEnd="6dp">
+                        <TextView android:id="@+id/txtUpdateCount"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="0" android:textColor="@color/status_warning"
+                            android:textSize="20sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Cập nhật" android:textColor="@color/status_warning"
+                            android:textSize="11sp"/>
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical"
+                        android:background="@drawable/badge_error" android:padding="10dp"
+                        android:gravity="center">
+                        <TextView android:id="@+id/txtErrorCount"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="0" android:textColor="@color/status_error"
+                            android:textSize="20sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Lỗi" android:textColor="@color/status_error"
+                            android:textSize="11sp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Error details -->
+                <TextView android:id="@+id/txtErrors"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:textColor="@color/status_error" android:textSize="12sp"
+                    android:background="@drawable/badge_error" android:padding="10dp"
+                    android:layout_marginBottom="8dp"/>
+            </LinearLayout>
+
+            <!-- Result Card -->
+            <LinearLayout android:id="@+id/cardResult"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:background="@drawable/card_surface" android:orientation="vertical"
+                android:padding="16dp" android:layout_marginBottom="12dp"
+                android:visibility="gone">
+                <TextView android:id="@+id/txtResult"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/status_success" android:textSize="14sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom button -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:background="@color/surface" android:padding="12dp" android:elevation="8dp">
+        <Button android:id="@+id/btnImport"
+            style="@style/Widget.Mpos.Button.Primary"
+            android:layout_width="match_parent" android:layout_height="50dp"
+            android:text="Nhập sản phẩm"
+            android:enabled="false" android:alpha="0.5"/>
+    </LinearLayout>
+
+</LinearLayout>

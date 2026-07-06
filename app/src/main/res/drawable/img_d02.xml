@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#FFF8F0"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Cup body gradient layers -->
+    <path android:fillColor="#795548"
+        android:pathData="M38,48 L36,90 Q36,96 42,96 L78,96 Q84,96 84,90 L82,48 Z"/>
+    <!-- Milk layer on top -->
+    <path android:fillColor="#F5E6D3"
+        android:pathData="M38,48 L40,65 L80,65 L82,48 Z"/>
+    <!-- Cup rim -->
+    <path android:fillColor="#5D4037"
+        android:pathData="M36,44 Q36,40 60,40 Q84,40 84,44 L84,50 Q84,54 60,54 Q36,54 36,50 Z"/>
+    <!-- Lid -->
+    <path android:fillColor="#8D6E63"
+        android:pathData="M34,40 Q34,36 60,36 Q86,36 86,40 L88,43 Q88,46 60,46 Q32,46 32,43 Z"/>
+    <!-- Straw -->
+    <path android:fillColor="#00000000" android:strokeColor="#FF7043" android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M72,36 L68,10"/>
+    <!-- Saucer -->
+    <path android:fillColor="#A1887F"
+        android:pathData="M27,98 Q27,104 60,104 Q93,104 93,98 L93,96 Q93,94 60,94 Q27,94 27,96 Z"/>
+    <!-- Handle -->
+    <path android:fillColor="#00000000" android:strokeColor="#5D4037" android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M84,62 Q99,62 99,74 Q99,86 84,86"/>
+</vector>

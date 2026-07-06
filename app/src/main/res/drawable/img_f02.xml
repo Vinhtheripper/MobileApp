@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#FFFDE7"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Bread baguette shape -->
+    <path android:fillColor="#FFA726"
+        android:pathData="M10,55 Q10,38 60,35 Q110,38 110,55 L110,65 Q110,82 60,85 Q10,82 10,65 Z"/>
+    <!-- Crust scoring marks -->
+    <path android:fillColor="#00000000" android:strokeColor="#E65100" android:strokeWidth="2"
+        android:pathData="M35,38 Q40,48 35,58"/>
+    <path android:fillColor="#00000000" android:strokeColor="#E65100" android:strokeWidth="2"
+        android:pathData="M50,36 Q55,46 50,56"/>
+    <path android:fillColor="#00000000" android:strokeColor="#E65100" android:strokeWidth="2"
+        android:pathData="M65,36 Q70,46 65,56"/>
+    <path android:fillColor="#00000000" android:strokeColor="#E65100" android:strokeWidth="2"
+        android:pathData="M80,38 Q85,48 80,58"/>
+    <!-- Pate filling peeking out -->
+    <path android:fillColor="#A1887F"
+        android:pathData="M20,62 Q60,66 100,62 L100,68 Q60,72 20,68 Z"/>
+    <!-- Herbs -->
+    <path android:fillColor="#4CAF50"
+        android:pathData="M30,63 Q35,60 40,63"/>
+    <path android:fillColor="#4CAF50"
+        android:pathData="M55,61 Q60,58 65,61"/>
+    <path android:fillColor="#4CAF50"
+        android:pathData="M78,63 Q83,60 88,63"/>
+    <!-- Bread top highlight -->
+    <path android:fillColor="#FFD54F" android:fillAlpha="100"
+        android:pathData="M20,40 Q60,36 100,40 Q60,38 20,40"/>
+</vector>

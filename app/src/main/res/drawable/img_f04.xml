@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#FFF8E1"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Bowl -->
+    <path android:fillColor="#EFEBE9"
+        android:pathData="M15,55 Q15,105 60,108 Q105,105 105,55 Z"/>
+    <path android:fillColor="#D7CCC8"
+        android:pathData="M15,55 Q20,52 60,50 Q100,52 105,55 Q100,58 60,60 Q20,58 15,55 Z"/>
+    <!-- Broth -->
+    <path android:fillColor="#FFB74D" android:fillAlpha="200"
+        android:pathData="M18,58 Q18,100 60,103 Q102,100 102,58 Q60,62 18,58 Z"/>
+    <!-- Noodles -->
+    <path android:fillColor="#FFF9C4" android:strokeColor="#FFF176" android:strokeWidth="0"
+        android:pathData="M25,65 Q40,62 55,66 Q70,70 85,66 Q95,63 100,65 Q90,68 75,71 Q60,74 45,70 Q30,66 25,65"/>
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M22,72 Q37,69 52,73 Q67,77 82,73 Q92,70 98,72 Q88,75 73,78 Q58,81 43,77 Q28,73 22,72"/>
+    <!-- Pork slices -->
+    <path android:fillColor="#FFCCBC"
+        android:pathData="M30,60 Q35,56 45,60 L42,66 Q37,70 30,66 Z"/>
+    <path android:fillColor="#FFAB91"
+        android:pathData="M30,60 Q35,56 45,60 Q40,58 30,60"/>
+    <!-- Spring onion -->
+    <path android:fillColor="#4CAF50"
+        android:pathData="M60,58 L58,48 L62,48 Z"/>
+    <path android:fillColor="#4CAF50"
+        android:pathData="M70,60 L68,50 L72,50 Z"/>
+    <!-- Chili -->
+    <path android:fillColor="#EF5350"
+        android:pathData="M80,60 L84,52 Q86,50 85,52 L82,60 Z"/>
+    <!-- Chopsticks -->
+    <path android:fillColor="#00000000" android:strokeColor="#8D6E63" android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M45,20 L50,55"/>
+    <path android:fillColor="#00000000" android:strokeColor="#8D6E63" android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M55,18 L60,55"/>
+</vector>

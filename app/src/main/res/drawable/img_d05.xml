@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#FFFDE7"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Glass body -->
+    <path android:fillColor="#C8E6C9" android:fillAlpha="160"
+        android:pathData="M33,32 L30,98 Q30,104 37,104 L83,104 Q90,104 90,98 L87,32 Z"/>
+    <!-- Avocado smoothie color -->
+    <path android:fillColor="#8BC34A"
+        android:pathData="M34,32 L32,70 L88,70 L86,32 Z"/>
+    <!-- Foam top -->
+    <path android:fillColor="#DCEDC8"
+        android:pathData="M33,65 Q60,58 87,65 L87,74 Q60,80 33,74 Z"/>
+    <!-- Glass glare -->
+    <path android:fillColor="#FFFFFF" android:fillAlpha="80"
+        android:pathData="M38,38 L38,90 Q40,90 42,90 L42,38 Z"/>
+    <!-- Glass rim -->
+    <path android:fillColor="#AED581" android:fillAlpha="200"
+        android:pathData="M31,28 Q31,24 60,24 Q89,24 89,28 L89,34 Q89,38 60,38 Q31,38 31,34 Z"/>
+    <!-- Straw -->
+    <path android:fillColor="#00000000" android:strokeColor="#F06292" android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:pathData="M71,24 L67,5"/>
+    <!-- Mint leaf decoration -->
+    <path android:fillColor="#388E3C"
+        android:pathData="M55,20 Q60,12 65,20 Q60,18 55,20"/>
+    <path android:fillColor="#388E3C"
+        android:pathData="M58,22 Q60,14 62,22 Q60,20 58,22"/>
+</vector>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#F1F8E9"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Spring rolls x3 -->
+    <!-- Roll 1 -->
+    <path android:fillColor="#C8E6C9"
+        android:pathData="M20,45 Q20,35 36,35 Q52,35 52,45 L52,85 Q52,95 36,95 Q20,95 20,85 Z"/>
+    <path android:fillColor="#A5D6A7"
+        android:pathData="M22,45 Q22,37 36,37 Q50,37 50,45 L50,55 Q36,52 22,55 Z"/>
+    <path android:fillColor="#81C784"
+        android:pathData="M22,55 Q36,52 50,55 L50,65 Q36,62 22,65 Z"/>
+    <!-- Roll 2 (middle, slightly overlapping) -->
+    <path android:fillColor="#DCEDC8"
+        android:pathData="M42,40 Q42,30 58,30 Q74,30 74,40 L74,80 Q74,90 58,90 Q42,90 42,80 Z"/>
+    <path android:fillColor="#C5E1A5"
+        android:pathData="M44,40 Q44,32 58,32 Q72,32 72,40 L72,50 Q58,47 44,50 Z"/>
+    <path android:fillColor="#AED581"
+        android:pathData="M44,50 Q58,47 72,50 L72,60 Q58,57 44,60 Z"/>
+    <!-- Shrimp visible -->
+    <path android:fillColor="#FF8A80"
+        android:pathData="M50,62 Q58,58 66,62 Q58,66 50,62"/>
+    <!-- Roll 3 -->
+    <path android:fillColor="#C8E6C9"
+        android:pathData="M65,43 Q65,33 80,33 Q95,33 95,43 L95,83 Q95,93 80,93 Q65,93 65,83 Z"/>
+    <path android:fillColor="#A5D6A7"
+        android:pathData="M67,43 Q67,35 80,35 Q93,35 93,43 L93,53 Q80,50 67,53 Z"/>
+    <!-- Dipping sauce -->
+    <path android:fillColor="#FF8F00"
+        android:pathData="M42,100 m-12,0 a12,6 0 1,0 24,0 a12,6 0 1,0 -24,0"/>
+    <path android:fillColor="#E65100"
+        android:pathData="M42,100 m-10,0 a10,5 0 1,0 20,0 a10,5 0 1,0 -20,0"/>
+</vector>

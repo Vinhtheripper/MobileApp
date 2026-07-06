@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#FFF3E0"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- 3 mochi balls on plate -->
+    <!-- Plate -->
+    <path android:fillColor="#F5F5F5"
+        android:pathData="M12,90 m-0,0 a48,16 0 1,0 96,0 a48,16 0 1,0 -96,0"/>
+    <!-- Mochi 1 (pink - red bean) -->
+    <path android:fillColor="#F48FB1"
+        android:pathData="M30,78 m-22,0 a22,20 0 1,0 44,0 a22,20 0 1,0 -44,0"/>
+    <path android:fillColor="#F06292" android:fillAlpha="150"
+        android:pathData="M30,78 m-20,0 a20,18 0 1,0 40,0 Q30,66 10,78"/>
+    <path android:fillColor="#FCE4EC" android:fillAlpha="120"
+        android:pathData="M25,70 m-6,0 a6,5 0 1,0 12,0 a6,5 0 1,0 -12,0"/>
+    <!-- Mochi 2 (white - sesame) -->
+    <path android:fillColor="#FAFAFA"
+        android:pathData="M60,76 m-22,0 a22,20 0 1,0 44,0 a22,20 0 1,0 -44,0"/>
+    <path android:fillColor="#E0E0E0" android:fillAlpha="150"
+        android:pathData="M60,76 m-20,0 a20,18 0 1,0 40,0 Q60,64 40,76"/>
+    <path android:fillColor="#FFFFFF" android:fillAlpha="180"
+        android:pathData="M55,68 m-6,0 a6,5 0 1,0 12,0 a6,5 0 1,0 -12,0"/>
+    <!-- Black sesame sprinkle -->
+    <path android:fillColor="#212121"
+        android:pathData="M57,72 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0"/>
+    <path android:fillColor="#212121"
+        android:pathData="M62,74 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0"/>
+    <!-- Mochi 3 (green - matcha) -->
+    <path android:fillColor="#A5D6A7"
+        android:pathData="M90,78 m-22,0 a22,20 0 1,0 44,0 a22,20 0 1,0 -44,0"/>
+    <path android:fillColor="#81C784" android:fillAlpha="150"
+        android:pathData="M90,78 m-20,0 a20,18 0 1,0 40,0 Q90,66 70,78"/>
+    <path android:fillColor="#E8F5E9" android:fillAlpha="180"
+        android:pathData="M85,70 m-6,0 a6,5 0 1,0 12,0 a6,5 0 1,0 -12,0"/>
+    <!-- Leaf decoration -->
+    <path android:fillColor="#4CAF50"
+        android:pathData="M88,58 Q92,52 96,58 Q92,60 88,58"/>
+</vector>

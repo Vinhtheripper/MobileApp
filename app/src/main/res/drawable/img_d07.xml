@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#FFF3E0"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Glass -->
+    <path android:fillColor="#FFECB3" android:fillAlpha="180"
+        android:pathData="M34,30 L31,100 Q31,106 38,106 L82,106 Q89,106 89,100 L86,30 Z"/>
+    <!-- Tea color layers - peach/orange -->
+    <path android:fillColor="#FF8A65"
+        android:pathData="M35,30 L33,55 L87,55 L85,30 Z"/>
+    <path android:fillColor="#FFAB91"
+        android:pathData="M33,55 L32,78 Q60,82 88,78 L87,55 Z"/>
+    <!-- Bubbles/slices at bottom -->
+    <path android:fillColor="#FF7043" android:fillAlpha="180"
+        android:pathData="M38,82 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0"/>
+    <path android:fillColor="#FF7043" android:fillAlpha="180"
+        android:pathData="M55,86 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0"/>
+    <path android:fillColor="#FF7043" android:fillAlpha="180"
+        android:pathData="M72,84 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0"/>
+    <!-- Milk foam -->
+    <path android:fillColor="#FFF8E1"
+        android:pathData="M33,25 Q60,18 87,25 L87,34 Q60,40 33,34 Z"/>
+    <!-- Glass rim -->
+    <path android:fillColor="#FFCC02"
+        android:pathData="M32,26 Q32,22 60,22 Q88,22 88,26 L88,32 Q88,36 60,36 Q32,36 32,32 Z"/>
+    <!-- Straw -->
+    <path android:fillColor="#00000000" android:strokeColor="#FF5722" android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:pathData="M70,22 L67,5"/>
+    <!-- Leaves -->
+    <path android:fillColor="#66BB6A"
+        android:pathData="M50,14 Q54,8 58,14 Q54,12 50,14"/>
+    <path android:fillColor="#66BB6A"
+        android:pathData="M53,16 Q60,8 67,16 Q60,14 53,16"/>
+</vector>

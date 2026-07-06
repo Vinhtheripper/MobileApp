@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- =============================================================
+         QUẦY mPOS PRO — COMPONENT DESIGN SYSTEM
+         Every component inherits from this file.
+         DO NOT hardcode colors or dimensions in layouts.
+         ============================================================= -->
+
+    <!-- ─────────────────────── TYPOGRAPHY ─────────────────────── -->
+
+    <!-- Base styles required by Android dot-notation hierarchy -->
+    <style name="TextAppearance.Mpos" parent="TextAppearance.Material3.BodyMedium"/>
+    <style name="Widget.Mpos" parent="android:Widget"/>
+    <style name="Widget.Mpos.Button" parent="Widget.Material3.Button"/>
+
+    <!-- Screen title — 18sp bold, navy -->
+    <style name="TextAppearance.Mpos.Title" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.01</item>
+    </style>
+
+    <!-- Section heading — 16sp semibold -->
+    <style name="TextAppearance.Mpos.Heading" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Body — 14sp regular -->
+    <style name="TextAppearance.Mpos.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Caption / Label — 12sp, secondary color -->
+    <style name="TextAppearance.Mpos.Caption" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- Overline — 11sp uppercase bold, letter-spaced -->
+    <style name="TextAppearance.Mpos.Overline" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.08</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <!-- Money amount — 28sp bold, brand blue -->
+    <style name="TextAppearance.Mpos.Money" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textColor">@color/blue_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <!-- Money on dark background — white -->
+    <style name="TextAppearance.Mpos.MoneyOnDark" parent="TextAppearance.Mpos.Money">
+        <item name="android:textColor">@color/surface</item>
+    </style>
+
+    <!-- AppBar title — 16sp bold, primary text -->
+    <style name="TextAppearance.Mpos.AppBarTitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- ──────────────────────── BUTTONS ──────────────────────── -->
+
+    <!-- Primary — blue, full width, 52dp -->
+    <style name="Widget.Mpos.Button.Primary" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/blue_primary</item>
+        <item name="android:textColor">@color/surface</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:minHeight">@dimen/btn_height_primary</item>
+        <item name="cornerRadius">@dimen/radius_sm</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <!-- Success — green, confirmation actions -->
+    <style name="Widget.Mpos.Button.Success" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/status_success</item>
+        <item name="android:textColor">@color/surface</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:minHeight">@dimen/btn_height_primary</item>
+        <item name="cornerRadius">@dimen/radius_sm</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <!-- Outline — white bg, blue border, secondary actions -->
+    <style name="Widget.Mpos.Button.Outline" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/border</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="android:textColor">@color/blue_primary</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minHeight">@dimen/btn_height_secondary</item>
+        <item name="cornerRadius">@dimen/radius_sm</item>
+    </style>
+
+    <!-- Ghost / text-only — tertiary actions -->
+    <style name="Widget.Mpos.Button.Ghost" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">@color/blue_primary</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minHeight">@dimen/btn_height_secondary</item>
+    </style>
+
+    <!-- Destructive ghost — logout, delete -->
+    <style name="Widget.Mpos.Button.Danger" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">@color/status_error</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minHeight">@dimen/btn_height_secondary</item>
+    </style>
+
+    <!-- ──────────────────────── CARDS ────────────────────────── -->
+
+    <!-- Standard white card -->
+    <style name="MposCard">
+        <item name="android:background">@drawable/card_surface</item>
+        <item name="android:elevation">@dimen/card_elevation</item>
+    </style>
+
+    <!-- ──────────────────────── INPUTS ───────────────────────── -->
+
+    <!-- Standard form input -->
+    <style name="Widget.Mpos.Input">
+        <item name="android:background">@drawable/input_background</item>
+        <item name="android:minHeight">@dimen/input_height</item>
+        <item name="android:paddingStart">@dimen/input_padding_h</item>
+        <item name="android:paddingEnd">@dimen/input_padding_h</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColorHint">@color/text_muted</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <!-- ──────────────────── BOTTOM NAVIGATION ────────────────── -->
+
+    <!-- Inactive nav tab label -->
+    <style name="TextAppearance.Mpos.NavLabel">
+        <item name="android:textSize">9sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <!-- Active nav tab label — blue -->
+    <style name="TextAppearance.Mpos.NavLabelActive">
+        <item name="android:textSize">9sp</item>
+        <item name="android:textColor">@color/blue_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>

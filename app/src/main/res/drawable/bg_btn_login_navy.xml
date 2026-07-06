@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dark navy pill button for secondary action (Sign up / Đăng ký) -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#03112D"/>
+            <corners android:radius="28dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#030E50"/>
+            <corners android:radius="28dp"/>
+        </shape>
+    </item>
+</selector>

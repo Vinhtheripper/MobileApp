@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#F1F8E9"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Cup -->
+    <path android:fillColor="#A5D6A7"
+        android:pathData="M35,35 L32,100 Q32,106 39,106 L81,106 Q88,106 88,100 L85,35 Z"/>
+    <!-- Matcha green layer -->
+    <path android:fillColor="#558B2F"
+        android:pathData="M36,35 L34,58 L86,58 L84,35 Z"/>
+    <!-- Milk layer -->
+    <path android:fillColor="#E8F5E9"
+        android:pathData="M34,58 L33,72 Q60,76 87,72 L86,58 Z"/>
+    <!-- Foam art (leaf pattern) -->
+    <path android:fillColor="#FFFFFF" android:fillAlpha="180"
+        android:pathData="M60,68 Q65,62 70,68 Q65,72 60,68"/>
+    <path android:fillColor="#FFFFFF" android:fillAlpha="180"
+        android:pathData="M60,68 Q55,62 50,68 Q55,72 60,68"/>
+    <!-- Matcha powder dusting -->
+    <path android:fillColor="#33691E" android:fillAlpha="100"
+        android:pathData="M42,38 L42,52 L48,52 L48,38 Z"/>
+    <path android:fillColor="#33691E" android:fillAlpha="100"
+        android:pathData="M54,36 L54,50 L60,50 L60,36 Z"/>
+    <!-- Cup rim/lid -->
+    <path android:fillColor="#388E3C"
+        android:pathData="M33,31 Q33,27 60,27 Q87,27 87,31 L87,37 Q87,41 60,41 Q33,41 33,37 Z"/>
+    <!-- Lid hole + straw -->
+    <path android:fillColor="#00000000" android:strokeColor="#FFFFFF" android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:pathData="M69,27 L65,8"/>
+    <!-- Handle -->
+    <path android:fillColor="#00000000" android:strokeColor="#388E3C" android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M88,58 Q102,58 102,70 Q102,82 88,82"/>
+</vector>

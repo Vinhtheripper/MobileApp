@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#FFF3E0"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Bread bag -->
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M18,35 L18,100 Q18,108 28,108 L92,108 Q102,108 102,100 L102,35 Q102,26 60,24 Q18,26 18,35 Z"/>
+    <!-- Bag top twist/tie -->
+    <path android:fillColor="#FF3D00"
+        android:pathData="M50,24 Q60,20 70,24 Q65,22 60,21 Q55,22 50,24"/>
+    <path android:fillColor="#FF3D00"
+        android:pathData="M55,20 L55,26 L65,26 L65,20 Q60,18 55,20 Z"/>
+    <!-- Bread slices visible through bag -->
+    <path android:fillColor="#FFE082" android:fillAlpha="200"
+        android:pathData="M25,40 L25,100 Q25,105 32,105 L50,105 L50,40 Z"/>
+    <path android:fillColor="#FFD54F" android:fillAlpha="180"
+        android:pathData="M52,40 L52,105 L70,105 L70,40 Z"/>
+    <path android:fillColor="#FFE082" android:fillAlpha="200"
+        android:pathData="M72,40 L72,105 L90,105 Q95,105 95,100 L95,40 Z"/>
+    <!-- Slice end (browner crust) -->
+    <path android:fillColor="#FF8F00"
+        android:pathData="M25,40 L25,105 Q30,108 38,105 L38,40 Z"/>
+    <!-- Crust texture lines -->
+    <path android:fillColor="#00000000" android:strokeColor="#FF6D00" android:strokeWidth="1"
+        android:pathData="M27,50 L37,50"/>
+    <path android:fillColor="#00000000" android:strokeColor="#FF6D00" android:strokeWidth="1"
+        android:pathData="M27,60 L37,60"/>
+    <path android:fillColor="#00000000" android:strokeColor="#FF6D00" android:strokeWidth="1"
+        android:pathData="M27,70 L37,70"/>
+    <!-- Kinh Do label on bag -->
+    <path android:fillColor="#D32F2F"
+        android:pathData="M55,45 L65,45 L65,55 L55,55 Z"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M57,47 L63,47 L63,53 L57,53 Z"/>
+    <!-- Nutrition info strip -->
+    <path android:fillColor="#FFFFFF" android:fillAlpha="180"
+        android:pathData="M20,88 L100,88 L100,96 L20,96 Z"/>
+</vector>

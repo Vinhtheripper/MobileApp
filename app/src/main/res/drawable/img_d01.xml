@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <!-- Background -->
+    <path android:fillColor="#FFF8F0"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Cup body -->
+    <path android:fillColor="#6D4C41"
+        android:pathData="M38,45 L35,90 Q35,95 40,95 L80,95 Q85,95 85,90 L82,45 Z"/>
+    <!-- Cup top rim -->
+    <path android:fillColor="#4E342E"
+        android:pathData="M35,42 Q35,38 60,38 Q85,38 85,42 L85,47 Q85,51 60,51 Q35,51 35,47 Z"/>
+    <!-- Saucer -->
+    <path android:fillColor="#8D6E63"
+        android:pathData="M28,97 Q28,103 60,103 Q92,103 92,97 L92,95 Q92,93 60,93 Q28,93 28,95 Z"/>
+    <!-- Coffee swirl -->
+    <path android:fillColor="#D7CCC8" android:strokeColor="#D7CCC8" android:strokeWidth="2"
+        android:pathData="M48,60 Q60,55 72,60 Q60,65 48,60"/>
+    <path android:fillColor="#D7CCC8" android:strokeColor="#D7CCC8" android:strokeWidth="2"
+        android:pathData="M51,68 Q60,63 69,68"/>
+    <!-- Steam -->
+    <path android:fillColor="#00000000" android:strokeColor="#BCAAA4" android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M50,33 Q53,27 50,21"/>
+    <path android:fillColor="#00000000" android:strokeColor="#BCAAA4" android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M60,31 Q63,25 60,19"/>
+    <path android:fillColor="#00000000" android:strokeColor="#BCAAA4" android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M70,33 Q73,27 70,21"/>
+    <!-- Handle -->
+    <path android:fillColor="#00000000" android:strokeColor="#4E342E" android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M85,58 Q100,58 100,70 Q100,82 85,82"/>
+</vector>

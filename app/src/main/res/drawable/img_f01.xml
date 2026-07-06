@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#FFF8E1"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Bread outer -->
+    <path android:fillColor="#FFB74D"
+        android:pathData="M15,65 Q15,45 60,40 Q105,45 105,65 L105,72 Q105,78 60,78 Q15,78 15,72 Z"/>
+    <!-- Bread top crust -->
+    <path android:fillColor="#F57C00"
+        android:pathData="M18,66 Q18,48 60,44 Q102,48 102,66 Q102,63 60,62 Q18,63 18,66 Z"/>
+    <!-- Sesame seeds -->
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M45,52 m-2,0 a2,3 0 1,0 4,0 a2,3 0 1,0 -4,0"/>
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M60,49 m-2,0 a2,3 0 1,0 4,0 a2,3 0 1,0 -4,0"/>
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M75,52 m-2,0 a2,3 0 1,0 4,0 a2,3 0 1,0 -4,0"/>
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M52,56 m-2,0 a2,3 0 1,0 4,0 a2,3 0 1,0 -4,0"/>
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M68,56 m-2,0 a2,3 0 1,0 4,0 a2,3 0 1,0 -4,0"/>
+    <!-- Meat layer -->
+    <path android:fillColor="#8D6E63"
+        android:pathData="M18,72 L18,80 Q18,84 60,84 Q102,84 102,80 L102,72 Z"/>
+    <!-- Lettuce -->
+    <path android:fillColor="#66BB6A"
+        android:pathData="M15,79 Q20,75 30,79 Q40,83 50,79 Q60,75 70,79 Q80,83 90,79 Q100,75 105,79 L105,84 Q60,88 15,84 Z"/>
+    <!-- Tomato -->
+    <path android:fillColor="#EF5350"
+        android:pathData="M20,83 Q60,79 100,83 L100,88 Q60,92 20,88 Z"/>
+    <!-- Bottom bread -->
+    <path android:fillColor="#FFA726"
+        android:pathData="M16,87 Q16,100 60,100 Q104,100 104,87 L104,84 Q60,88 16,84 Z"/>
+    <path android:fillColor="#E65100"
+        android:pathData="M17,96 Q60,102 103,96 Q60,100 17,96 Z"/>
+</vector>

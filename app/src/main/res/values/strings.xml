@@ -1,0 +1,8 @@
+﻿<resources>
+    <string name="app_name">Quầy</string>
+    <!-- Thay bằng Web Client ID từ Google Cloud Console -->
+    <string name="google_web_client_id">498042769725-7m2a7c8akk9hptjgq12s6449dm4cekim.apps.googleusercontent.com</string>
+    <string name="dashboard_greeting">Tổng quan cửa hàng</string>
+    <string name="today_revenue">Doanh thu hôm nay</string>
+    <string name="new_sale">Tạo đơn bán</string>
+</resources>

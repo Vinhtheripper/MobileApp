@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ================================================================
+         QUẦY BRAND COLORS — anchored to mascot brand palette #2875FB
+         ================================================================ -->
+
+    <!-- Primary Blue — exact mascot brand color -->
+    <color name="blue_primary">#2875FB</color>
+    <color name="blue_primary_dark">#1A5FD6</color>
+    <color name="blue_primary_pressed">#1550BE</color>
+
+    <!-- Dark Navy — mascot brand dark #030E50 -->
+    <color name="blue_navy">#030E50</color>
+    <color name="deep_navy_text">#030E50</color>
+
+    <!-- Light Blue tints — mascot brand #C3D7FC -->
+    <color name="blue_sky">#C3D7FC</color>
+    <color name="blue_soft">#EBF1FF</color>
+    <color name="blue_subtle">#F0F5FF</color>
+
+    <!-- Cyan accent — used for secondary highlights -->
+    <color name="cyan_accent">#60A5FA</color>
+
+    <!-- ================================================================
+         SEMANTIC STATUS COLORS
+         ================================================================ -->
+    <color name="status_success">#16A34A</color>
+    <color name="status_success_dark">#166534</color>
+    <color name="status_warning">#D97706</color>
+    <color name="status_warning_dark">#92400E</color>
+    <color name="status_error">#DC2626</color>
+    <color name="status_error_dark">#991B1B</color>
+    <color name="status_info">#0284C7</color>
+
+    <!-- Soft background variants for badges/chips -->
+    <color name="success_soft">#DCFCE7</color>
+    <color name="warning_soft">#FEF3C7</color>
+    <color name="error_soft">#FEE2E2</color>
+    <color name="info_soft">#E0F2FE</color>
+    <color name="pending_soft">#EDE9FE</color>
+
+    <!-- ================================================================
+         TEXT COLORS
+         ================================================================ -->
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#475569</color>
+    <color name="text_muted">#94A3B8</color>
+    <color name="text_disabled">#CBD5E1</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <color name="text_on_dark">#FFFFFF</color>
+    <color name="text_link">#2875FB</color>
+
+    <!-- ================================================================
+         SURFACE & BACKGROUND
+         ================================================================ -->
+    <color name="app_background">#F6F7FB</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#F8FAFF</color>
+
+    <!-- ================================================================
+         BORDERS & DIVIDERS
+         ================================================================ -->
+    <color name="border">#E2E8F0</color>
+    <color name="border_strong">#CBD5E1</color>
+    <color name="divider">#F1F5F9</color>
+
+    <!-- ================================================================
+         DISABLED STATES
+         ================================================================ -->
+    <color name="disabled_background">#E2E8F0</color>
+    <color name="disabled_text">#94A3B8</color>
+
+    <!-- ================================================================
+         SPECIAL — pending purple for inbox/sync
+         ================================================================ -->
+    <color name="pending_purple">#7C3AED</color>
+
+    <!-- ================================================================
+         LEGACY ALIAS — do not remove, referenced in existing layouts
+         ================================================================ -->
+    <!-- NOTE: These "blue_*" names historically held orange values.
+         They now correctly hold the real brand blue. Do not rename
+         or existing layouts referencing @color/blue_primary will break. -->
+
+</resources>

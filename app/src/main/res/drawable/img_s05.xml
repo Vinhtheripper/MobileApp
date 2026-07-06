@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#FFF8E1"
+        android:pathData="M0,12 Q0,0 12,0 L108,0 Q120,0 120,12 L120,108 Q120,120 108,120 L12,120 Q0,120 0,108 Z"/>
+    <!-- Fry basket/paper -->
+    <path android:fillColor="#F5F5F5"
+        android:pathData="M20,50 L18,105 Q18,110 30,110 L90,110 Q102,110 102,105 L100,50 Z"/>
+    <path android:fillColor="#E0E0E0"
+        android:pathData="M20,50 L100,50 L102,56 L18,56 Z"/>
+    <!-- Red checkered pattern hint -->
+    <path android:fillColor="#FFCDD2" android:fillAlpha="100"
+        android:pathData="M20,50 L30,50 L30,60 L20,60 Z"/>
+    <path android:fillColor="#FFCDD2" android:fillAlpha="100"
+        android:pathData="M40,50 L50,50 L50,60 L40,60 Z"/>
+    <path android:fillColor="#FFCDD2" android:fillAlpha="100"
+        android:pathData="M60,50 L70,50 L70,60 L60,60 Z"/>
+    <path android:fillColor="#FFCDD2" android:fillAlpha="100"
+        android:pathData="M80,50 L90,50 L90,60 L80,60 Z"/>
+    <!-- Fries sticking up -->
+    <path android:fillColor="#FFB300"
+        android:pathData="M32,20 L32,65 L38,65 L38,20 Z"/>
+    <path android:fillColor="#FF8F00"
+        android:pathData="M32,20 L38,20 L38,22 L32,22 Z"/>
+    <path android:fillColor="#FFB300"
+        android:pathData="M43,15 L43,62 L49,62 L49,15 Z"/>
+    <path android:fillColor="#FF8F00"
+        android:pathData="M43,15 L49,15 L49,17 L43,17 Z"/>
+    <path android:fillColor="#FFB300"
+        android:pathData="M54,10 L54,58 L60,58 L60,10 Z"/>
+    <path android:fillColor="#FF8F00"
+        android:pathData="M54,10 L60,10 L60,12 L54,12 Z"/>
+    <path android:fillColor="#FFB300"
+        android:pathData="M65,14 L65,60 L71,60 L71,14 Z"/>
+    <path android:fillColor="#FF8F00"
+        android:pathData="M65,14 L71,14 L71,16 L65,16 Z"/>
+    <path android:fillColor="#FFB300"
+        android:pathData="M76,18 L76,63 L82,63 L82,18 Z"/>
+    <path android:fillColor="#FF8F00"
+        android:pathData="M76,18 L82,18 L82,20 L76,20 Z"/>
+    <!-- Ketchup packet -->
+    <path android:fillColor="#EF5350"
+        android:pathData="M22,85 L22,100 Q22,105 32,105 L44,105 Q54,105 54,100 L54,85 Q54,80 38,80 Q22,80 22,85 Z"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M26,90 L50,90 L50,93 L26,93 Z"/>
+</vector>
