@@ -46,13 +46,19 @@ public class ReceiptActivity extends AppCompatActivity {
         orderId       = getIntent().getLongExtra("order_id", -1);
         paymentMethod = getIntent().getStringExtra("payment_method");
         receivedCash  = getIntent().getLongExtra("received_cash", 0);
+        boolean fromHistory = getIntent().getBooleanExtra("from_history", false);
 
         loadReceipt(orderId, paymentMethod, receivedCash);
 
-        findViewById(R.id.btnNewSale).setOnClickListener(v -> {
-            startActivity(new Intent(this, PosActivity.class));
-            finish();
-        });
+        View btnNewSale = findViewById(R.id.btnNewSale);
+        if (fromHistory) {
+            btnNewSale.setVisibility(View.GONE);
+        } else {
+            btnNewSale.setOnClickListener(v -> {
+                startActivity(new Intent(this, PosActivity.class));
+                finish();
+            });
+        }
         findViewById(R.id.btnPrint).setOnClickListener(v -> printReceipt());
         findViewById(R.id.btnShare).setOnClickListener(v -> shareReceipt());
 
@@ -65,10 +71,14 @@ public class ReceiptActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(this, OrderListActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(i);
-        finish();
+        if (getIntent().getBooleanExtra("from_history", false)) {
+            finish();
+        } else {
+            Intent i = new Intent(this, OrderListActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
+            finish();
+        }
     }
 
     // ─── Load receipt ─────────────────────────────────────────────────────────

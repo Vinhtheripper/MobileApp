@@ -210,14 +210,30 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Shipping action button -->
-                <Button
-                    android:id="@+id/btnShipOrder"
-                    style="@style/Widget.Mpos.Button.Outline"
+                <!-- Action buttons -->
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="🚚  Tạo đơn giao hàng / So sánh giá"/>
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnViewReceipt"
+                        style="@style/Widget.Mpos.Button.Outline"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:text="🧾  Xem hóa đơn"/>
+
+                    <Button
+                        android:id="@+id/btnShipOrder"
+                        style="@style/Widget.Mpos.Button.Outline"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="🚚  Tạo đơn giao hàng"/>
+                </LinearLayout>
 
             </LinearLayout>
         </ScrollView>

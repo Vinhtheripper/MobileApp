@@ -93,7 +93,7 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Customer Phone -->
+                <!-- Customer + Channel section -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -103,6 +103,43 @@
                     android:textStyle="bold"
                     android:letterSpacing="0.08"/>
 
+                <!-- Channel toggle -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_card_white_12"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:id="@+id/chipWalkIn"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="🏪  Tại quầy"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:background="@drawable/bg_chip_selected"
+                        android:clickable="true"
+                        android:focusable="true"/>
+
+                    <TextView
+                        android:id="@+id/chipSocial"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="📱  Đặt qua MXH"
+                        android:textSize="13sp"
+                        android:textColor="#64748B"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                </LinearLayout>
+
                 <EditText
                     android:id="@+id/inputCustomerPhone"
                     android:layout_width="match_parent"
@@ -111,6 +148,32 @@
                     android:background="@drawable/bg_card_white_12"
                     android:hint="Số điện thoại khách hàng"
                     android:inputType="phone"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="#1C2333"
+                    android:textColorHint="#94A3B8"/>
+
+                <EditText
+                    android:id="@+id/inputCustomerName"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_card_white_12"
+                    android:hint="Tên khách hàng"
+                    android:inputType="textPersonName|textCapWords"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="#1C2333"
+                    android:textColorHint="#94A3B8"/>
+
+                <EditText
+                    android:id="@+id/inputCustomerAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_card_white_12"
+                    android:hint="Địa chỉ giao hàng (nếu có)"
+                    android:inputType="textPostalAddress"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:textColor="#1C2333"

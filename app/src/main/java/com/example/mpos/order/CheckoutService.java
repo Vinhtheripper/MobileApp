@@ -4,37 +4,56 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import android.content.Context;
+
 import com.example.mpos.cart.CartManager;
 import com.example.mpos.database.DatabaseHelper;
 import com.example.mpos.model.CartItem;
 import com.example.mpos.sync.AuditLogger;
+import com.example.mpos.sync.RtdbSync;
 
 /** Writes every sale atomically: order, items, payment, stock log, receipt and outbox. */
 public class CheckoutService {
     private final DatabaseHelper helper;
     private final long shopId;
+    private final Context context;
+
     public CheckoutService(DatabaseHelper helper, long shopId) {
-        this.helper = helper;
-        this.shopId = shopId;
+        this.helper  = helper;
+        this.shopId  = shopId;
+        this.context = null;
+    }
+
+    public CheckoutService(Context context, DatabaseHelper helper, long shopId) {
+        this.helper  = helper;
+        this.shopId  = shopId;
+        this.context = context;
     }
 
     public long checkoutWithDiscount(long userId, long shiftId, String customerPhone,
                                       String paymentMethod, long receivedCash, long discountAmount) {
-        // temporarily adjust cart total by writing discount_amount into order; delegate to checkout
-        return checkout(userId, shiftId, customerPhone, paymentMethod, receivedCash, discountAmount);
+        return checkout(userId, shiftId, customerPhone, null, null, "WALK_IN", paymentMethod, receivedCash, discountAmount);
+    }
+
+    public long checkoutWithDiscount(long userId, long shiftId, String customerPhone,
+                                      String customerName, String customerAddress, String channel,
+                                      String paymentMethod, long receivedCash, long discountAmount) {
+        return checkout(userId, shiftId, customerPhone, customerName, customerAddress, channel, paymentMethod, receivedCash, discountAmount);
     }
 
     public long checkout(long userId, long shiftId, String customerPhone, String paymentMethod, long receivedCash) {
-        return checkout(userId, shiftId, customerPhone, paymentMethod, receivedCash, 0);
+        return checkout(userId, shiftId, customerPhone, null, null, "WALK_IN", paymentMethod, receivedCash, 0);
     }
 
-    private long checkout(long userId, long shiftId, String customerPhone, String paymentMethod, long receivedCash, long discountAmount) {
+    private long checkout(long userId, long shiftId, String customerPhone,
+                          String customerName, String customerAddress, String channel,
+                          String paymentMethod, long receivedCash, long discountAmount) {
         CartManager cart = CartManager.get();
         if (cart.isEmpty()) throw new IllegalStateException("Giỏ hàng đang trống");
         SQLiteDatabase db = helper.getWritableDatabase();
         db.beginTransaction();
         try {
-            long customerId = findOrCreateCustomer(db, customerPhone);
+            long customerId = findOrCreateCustomer(db, customerPhone, customerName, customerAddress);
             long subtotal = cart.subtotal();
             long taxAmt   = cart.tax();
             long total    = Math.max(cart.total() - discountAmount, 0);
@@ -46,7 +65,7 @@ public class CheckoutService {
             order.put("user_id", userId);
             order.put("shift_id", shiftId);
             order.put("shop_id", shopId);
-            order.put("channel", "WALK_IN");
+            order.put("channel", channel != null ? channel : "WALK_IN");
             order.put("status", "PAID");
             order.put("subtotal", subtotal);
             order.put("vat_percent", 10);
@@ -79,6 +98,17 @@ public class CheckoutService {
             AuditLogger.log(db, userId, "CREATE_SALE", "ORDER", orderId, "Thanh toán " + paymentMethod);
             db.setTransactionSuccessful();
             cart.clear();
+
+            // Push to Firebase Realtime Database (fire-and-forget)
+            if (context != null) {
+                final long finalOrderId = orderId;
+                new Thread(() -> {
+                    try {
+                        new RtdbSync(context, shopId).pushOrder(finalOrderId);
+                    } catch (Exception ignored) {}
+                }).start();
+            }
+
             return orderId;
         } finally { db.endTransaction(); }
     }
@@ -125,15 +155,34 @@ public class CheckoutService {
         db.insertOrThrow("inventory_transactions", null, movement);
     }
 
-    private long findOrCreateCustomer(SQLiteDatabase db, String phone) {
+    private long findOrCreateCustomer(SQLiteDatabase db, String phone, String name, String address) {
         if (phone == null || phone.trim().isEmpty()) return -1;
+        String p = phone.trim();
         Cursor c = db.rawQuery("SELECT id FROM customers WHERE phone=? AND shop_id=?",
-            new String[]{phone.trim(), String.valueOf(shopId)});
-        try { if (c.moveToFirst()) return c.getLong(0); } finally { c.close(); }
+            new String[]{p, String.valueOf(shopId)});
+        long existingId = -1;
+        try { if (c.moveToFirst()) existingId = c.getLong(0); } finally { c.close(); }
+
+        long now = System.currentTimeMillis();
+        if (existingId > 0) {
+            // Update name/address if provided
+            if ((name != null && !name.isEmpty()) || (address != null && !address.isEmpty())) {
+                ContentValues upd = new ContentValues();
+                if (name != null && !name.isEmpty()) upd.put("full_name", name);
+                if (address != null && !address.isEmpty()) upd.put("address", address);
+                upd.put("updated_at", now);
+                db.update("customers", upd, "id=?", new String[]{String.valueOf(existingId)});
+            }
+            return existingId;
+        }
+
         ContentValues customer = new ContentValues();
-        customer.put("phone", phone.trim());
+        customer.put("phone", p);
         customer.put("shop_id", shopId);
-        customer.put("created_at", System.currentTimeMillis());
+        if (name != null && !name.isEmpty()) customer.put("full_name", name);
+        if (address != null && !address.isEmpty()) customer.put("address", address);
+        customer.put("created_at", now);
+        customer.put("updated_at", now);
         return db.insertOrThrow("customers", null, customer);
     }
 

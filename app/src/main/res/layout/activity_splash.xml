@@ -41,15 +41,15 @@
                 android:background="@drawable/bg_mascot_glow_ring"
                 android:alpha="0"/>
 
-            <!-- Mascot image — bounce animation -->
+            <!-- Logo image — bounce animation -->
             <ImageView
                 android:id="@+id/imgMascot"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_mascot_png"
+                android:src="@drawable/ic_logo_bg"
                 android:scaleType="fitCenter"
-                android:contentDescription="Quầy mascot"
+                android:contentDescription="Quầy logo"
                 android:alpha="0"/>
         </FrameLayout>
 

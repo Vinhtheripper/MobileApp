@@ -217,7 +217,7 @@
                         android:paddingTop="4dp"
                         android:paddingBottom="4dp"
                         android:text="Chưa mở ca"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#1C2333"
                         android:textSize="11sp"
                         android:textStyle="bold"/>
                 </LinearLayout>
@@ -801,20 +801,27 @@
                     android:textSize="16sp"
                     android:textStyle="bold"/>
                 <TextView
+                    android:id="@+id/btnViewChannels"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Phân tích ›"
+                    android:text="Quản lý ›"
                     android:textColor="@color/blue_primary"
-                    android:textSize="13sp"/>
+                    android:textSize="13sp"
+                    android:clickable="true"
+                    android:focusable="true"/>
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btnChannelCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/card_surface"
                 android:elevation="@dimen/card_elevation"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -916,7 +923,7 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/ic_ai_mascot"
+                            android:src="@drawable/ic_mascot_png"
                             android:scaleType="centerCrop"
                             android:contentDescription="@null"/>
                     </FrameLayout>
@@ -1016,7 +1023,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="So sánh giá vận chuyển"
+                        android:text="Giao hàng"
                         android:textColor="#FFFFFF"
                         android:textSize="15sp"
                         android:textStyle="bold"/>
@@ -1024,7 +1031,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
-                        android:text="GHN • GHTK • ViettelPost"
+                        android:text="GHN • GHTK · Tạo &amp; tra cứu vận đơn"
                         android:textColor="#C3D7FC"
                         android:textSize="12sp"/>
                 </LinearLayout>

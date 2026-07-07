@@ -40,8 +40,9 @@ public class CheckoutActivity extends AppCompatActivity {
     private static final String METHOD_CARD   = "CARD";
     private static final String METHOD_WALLET = "EWALLET";
 
-    private String selectedMethod = METHOD_CASH;
-    private String selectedWallet = "MOMO";
+    private String selectedMethod  = METHOD_CASH;
+    private String selectedWallet  = "MOMO";
+    private String selectedChannel = "WALK_IN";
 
     private LinearLayout cardCash, cardVietQR, cardBank, cardWallet;
     private TextView txtCashRadio, txtVietQRRadio, txtBankRadio, txtWalletRadio;
@@ -99,6 +100,14 @@ public class CheckoutActivity extends AppCompatActivity {
         txtLoyaltyDiscount = findViewById(R.id.txtLoyaltyDiscount);
         btnToggleRedeem  = findViewById(R.id.btnToggleRedeem);
 
+        // Channel chips
+        TextView chipWalkIn = findViewById(R.id.chipWalkIn);
+        TextView chipSocial = findViewById(R.id.chipSocial);
+        if (chipWalkIn != null && chipSocial != null) {
+            chipWalkIn.setOnClickListener(v -> selectChannel("WALK_IN", chipWalkIn, chipSocial));
+            chipSocial.setOnClickListener(v -> selectChannel("ORDER",   chipWalkIn, chipSocial));
+        }
+
         txtTotal.setText(CurrencyUtils.vnd(totalAmount));
         txtQRAmount.setText(CurrencyUtils.vnd(totalAmount));
         int itemCount = CartManager.get().getCount();
@@ -143,6 +152,17 @@ public class CheckoutActivity extends AppCompatActivity {
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         findViewById(R.id.btnConfirmPayment).setOnClickListener(this::handleConfirm);
+    }
+
+    // ─── Channel toggle ───────────────────────────────────────────────────────
+
+    private void selectChannel(String channel, TextView chipWalkIn, TextView chipSocial) {
+        selectedChannel = channel;
+        boolean isWalkIn = "WALK_IN".equals(channel);
+        chipWalkIn.setTextColor(isWalkIn ? 0xFFFFFFFF : 0xFF64748B);
+        chipWalkIn.setBackgroundResource(isWalkIn ? R.drawable.bg_chip_selected : android.R.color.transparent);
+        chipSocial.setTextColor(isWalkIn ? 0xFF64748B : 0xFFFFFFFF);
+        chipSocial.setBackgroundResource(isWalkIn ? android.R.color.transparent : R.drawable.bg_chip_selected);
     }
 
     // ─── Wallet sub-options ───────────────────────────────────────────────────
@@ -403,10 +423,14 @@ public class CheckoutActivity extends AppCompatActivity {
         btnView.setEnabled(false);
         try {
             String phone    = ((EditText) findViewById(R.id.inputCustomerPhone)).getText().toString().trim();
+            EditText nameField = findViewById(R.id.inputCustomerName);
+            EditText addrField = findViewById(R.id.inputCustomerAddress);
+            String custName = nameField != null ? nameField.getText().toString().trim() : "";
+            String custAddr = addrField != null ? addrField.getText().toString().trim() : "";
             long received   = METHOD_CASH.equals(selectedMethod) ? parseMoney(inputReceived.getText().toString()) : effectiveTotal();
             String method   = METHOD_WALLET.equals(selectedMethod) ? selectedWallet : selectedMethod;
-            long orderId    = new CheckoutService(db, session.getShopId())
-                .checkoutWithDiscount(session.getUser().id, shiftId, phone, method, received, redeemDiscount);
+            long orderId    = new CheckoutService(this, db, session.getShopId())
+                .checkoutWithDiscount(session.getUser().id, shiftId, phone, custName, custAddr, selectedChannel, method, received, redeemDiscount);
 
             // Award loyalty points
             if (customerId > 0) {

@@ -34,11 +34,19 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class ShippingActivity extends AppCompatActivity {
 
@@ -48,10 +56,15 @@ public class ShippingActivity extends AppCompatActivity {
     private static final String KEY_GHTK_TOKEN = "ghtk_token";
     private static final String KEY_VTP_TOKEN  = "vtp_token";
 
-    private static final String GHN_FEE_URL  = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee";
-    private static final String GHTK_FEE_URL = "https://services.giaohangtietkiem.vn/services/shipment/fee";
-    private static final String VTP_FEE_URL  = "https://partner.viettelpost.vn/v2/order/getPriceAll";
-    private static final String GHN_TRACK_URL = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/detail";
+    private static final String GHN_FEE_URL    = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee";
+    private static final String GHN_CREATE_URL = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/create";
+    private static final String GHN_TRACK_URL  = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/detail";
+    private static final String GHTK_FEE_URL   = "https://services.giaohangtietkiem.vn/services/shipment/fee";
+    private static final String GHTK_CREATE_URL = "https://services.giaohangtietkiem.vn/services/shipment/order/?ver=1.5";
+    private static final String GHTK_TRACK_URL  = "https://services.giaohangtietkiem.vn/services/shipment/v2/";
+    private static final String VTP_FEE_URL     = "https://partner.viettelpost.vn/v2/order/getPriceAll";
+    private static final String VTP_CREATE_URL  = "https://partner.viettelpost.vn/v2/order/createOrder";
+    private static final String VTP_TRACK_URL   = "https://partner.viettelpost.vn/v2/order/getOrderByOrderNumber?ORDER_NUMBER=";
 
     // GHN province_id mapping (province name → GHN province_id)
     private static final Map<String, Integer> GHN_PROVINCE_ID = new HashMap<String, Integer>() {{
@@ -250,20 +263,20 @@ public class ShippingActivity extends AppCompatActivity {
     }
 
     private void confirmCreateShipping(long orderId, String orderCode, long cod) {
-        etCod.setText(String.valueOf(cod));
+        // Count items for this order
+        int itemCount = 0;
+        try (android.database.Cursor ic = db.getReadableDatabase().rawQuery(
+                "SELECT COUNT(*) FROM order_items WHERE order_id=?",
+                new String[]{String.valueOf(orderId)})) {
+            if (ic.moveToFirst()) itemCount = ic.getInt(0);
+        } catch (Exception ignored) {}
 
-        new AlertDialog.Builder(this)
-            .setTitle("Tạo vận đơn")
-            .setMessage("Tạo vận đơn cho đơn hàng " + orderCode + "?\n" +
-                "COD: " + CurrencyUtils.vnd(cod) + "\n" +
-                "Nhấn 'So sánh giá' để chọn đơn vị vận chuyển.")
-            .setPositiveButton("Đã hiểu", (d, w) -> {
-                sourceOrderId = orderId;
-                etCod.setText(String.valueOf(cod));
-                // Scroll down to comparison form
-            })
-            .setNegativeButton("Hủy", null)
-            .show();
+        android.content.Intent intent = new android.content.Intent(this, CreateShippingOrderActivity.class);
+        intent.putExtra("order_id",   orderId);
+        intent.putExtra("cod_amount", cod);
+        intent.putExtra("item_count", itemCount);
+        intent.putExtra("order_code", orderCode);
+        startActivity(intent);
     }
 
     // ── Rate comparison ───────────────────────────────────────────────────────
@@ -346,6 +359,7 @@ public class ShippingActivity extends AppCompatActivity {
             int fee = json.getJSONObject("data").getInt("total");
             return new ShippingResult("GHN", fee, "1-2 ngày", "ghn.vn", true);
         } catch (Exception e) {
+            android.util.Log.e("GHN_API", "fetchGhnRate failed: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
             return mockRate("GHN", from, to, weightGram / 1000.0, codAmount, 1.0);
         }
     }
@@ -376,6 +390,10 @@ public class ShippingActivity extends AppCompatActivity {
                 + "&deliver_option=none";
             URL url = new URL(urlStr);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            if (conn instanceof HttpsURLConnection) {
+                SSLContext sc = trustAllSslContext();
+                if (sc != null) { ((HttpsURLConnection)conn).setSSLSocketFactory(sc.getSocketFactory()); ((HttpsURLConnection)conn).setHostnameVerifier((h,s)->true); }
+            }
             conn.setRequestProperty("Token", token);
             conn.setConnectTimeout(15000); conn.setReadTimeout(15000);
             StringBuilder sb = new StringBuilder();
@@ -594,28 +612,196 @@ public class ShippingActivity extends AppCompatActivity {
     }
 
     private void recordShippingOrder(ShippingResult r) {
-        String from = spinnerFromProvince.getSelectedItem().toString();
-        String to   = spinnerToProvince.getSelectedItem().toString();
-        int    wg   = 500;
-        try { wg = (int)(Double.parseDouble(etWeight.getText().toString()) * 1000); }
-        catch (Exception ignored) {}
+        // Show dialog to collect recipient info before creating the real order
+        android.view.View form = getLayoutInflater().inflate(
+            android.R.layout.simple_list_item_2, null);
 
-        ContentValues cv = new ContentValues();
-        cv.put("order_id",      sourceOrderId);
-        cv.put("carrier",       r.carrier);
-        cv.put("shipping_fee",  r.fee);
-        cv.put("from_province", from);
-        cv.put("to_province",   to);
-        cv.put("weight_gram",   wg);
-        cv.put("status",        "BOOKED");
-        cv.put("created_at",    System.currentTimeMillis());
-        db.getWritableDatabase().insert("shipping_orders", null, cv);
+        // Build input form programmatically
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(dp(20), dp(16), dp(20), dp(8));
 
-        Toast.makeText(this, "Đã ghi nhận vận đơn " + r.carrier +
-            " - " + CurrencyUtils.vnd(r.fee), Toast.LENGTH_LONG).show();
+        EditText etName    = makeInput(layout, "Tên người nhận *", "Nguyễn Văn A");
+        EditText etPhone   = makeInput(layout, "Số điện thoại *", "0901234567");
+        EditText etAddress = makeInput(layout, "Địa chỉ giao hàng *", "123 Đường ABC, Phường XYZ");
+        EditText etDistrict = makeInput(layout, "Quận/Huyện *", "Quận 1");
 
-        sourceOrderId = -1;
-        loadPendingOrders();
+        String codStr = etCod.getText().toString().trim();
+
+        new AlertDialog.Builder(this)
+            .setTitle("Tạo vận đơn " + r.carrier)
+            .setView(layout)
+            .setPositiveButton("Tạo đơn", (d, w) -> {
+                String name     = etName.getText().toString().trim();
+                String phone    = etPhone.getText().toString().trim();
+                String address  = etAddress.getText().toString().trim();
+                String district = etDistrict.getText().toString().trim();
+
+                if (name.isEmpty() || phone.isEmpty() || address.isEmpty()) {
+                    Toast.makeText(this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                int cod = 0;
+                try { cod = Integer.parseInt(codStr); } catch (Exception ignored) {}
+                int wg = 500;
+                try { wg = (int)(Double.parseDouble(etWeight.getText().toString()) * 1000); }
+                catch (Exception ignored2) {}
+
+                String from = spinnerFromProvince.getSelectedItem().toString();
+                String to   = spinnerToProvince.getSelectedItem().toString();
+                final int finalWg = wg, finalCod = cod;
+                final long finalOrderId = sourceOrderId;
+
+                progressCompare.setVisibility(View.VISIBLE);
+                new Thread(() -> {
+                    String trackingCode = null;
+                    String ghnToken  = getPrefs().getString(KEY_GHN_TOKEN, "");
+                    String ghtkToken = getPrefs().getString(KEY_GHTK_TOKEN, "");
+
+                    try {
+                        if ("GHN".equals(r.carrier) && !ghnToken.isEmpty()) {
+                            trackingCode = createGhnOrder(ghnToken,
+                                getPrefs().getString(KEY_GHN_SHOP, "0"),
+                                name, phone, address, district, to, finalWg, finalCod);
+                        } else if ("GHTK".equals(r.carrier) && !ghtkToken.isEmpty()) {
+                            trackingCode = createGhtkOrder(ghtkToken,
+                                name, phone, address, district, from, to, finalWg, finalCod);
+                        }
+                    } catch (Exception e) {
+                        android.util.Log.e("ShippingActivity", "Create order error: " + e.getMessage());
+                    }
+
+                    final boolean apiSuccess = trackingCode != null;
+                    final String finalTrackCode = apiSuccess ? trackingCode
+                        : (r.carrier.substring(0, Math.min(3, r.carrier.length())).toUpperCase()
+                           + "-" + System.currentTimeMillis() % 100000);
+
+                    ContentValues cv = new ContentValues();
+                    cv.put("order_id",      finalOrderId);
+                    cv.put("carrier",       r.carrier);
+                    cv.put("tracking_code", finalTrackCode);
+                    cv.put("shipping_fee",  r.fee);
+                    cv.put("from_province", from);
+                    cv.put("to_province",   to);
+                    cv.put("weight_gram",   finalWg);
+                    cv.put("status",        apiSuccess ? "CONFIRMED" : "BOOKED");
+                    cv.put("created_at",    System.currentTimeMillis());
+                    db.getWritableDatabase().insert("shipping_orders", null, cv);
+
+                    runOnUiThread(() -> {
+                        progressCompare.setVisibility(View.GONE);
+                        String msg = apiSuccess
+                            ? "Tạo vận đơn thành công!\nMã: " + finalTrackCode
+                            : "Đã lưu vận đơn (chưa có API token — mã tạm: " + finalTrackCode + ")";
+                        new AlertDialog.Builder(this)
+                            .setTitle("Vận đơn " + r.carrier)
+                            .setMessage(msg)
+                            .setPositiveButton("Theo dõi đơn", (dd, ww) -> {
+                                etTrackCode.setText(finalTrackCode);
+                                trackOrder();
+                            })
+                            .setNegativeButton("Đóng", null)
+                            .show();
+                        sourceOrderId = -1;
+                        loadPendingOrders();
+                    });
+                }).start();
+            })
+            .setNegativeButton("Hủy", null)
+            .show();
+    }
+
+    private EditText makeInput(LinearLayout parent, String hint, String placeholder) {
+        TextView label = new TextView(this);
+        label.setText(hint);
+        label.setTextSize(12f);
+        label.setTextColor(0xFF6B7280);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(0, dp(8), 0, 0);
+        label.setLayoutParams(lp);
+        parent.addView(label);
+
+        EditText et = new EditText(this);
+        et.setHint(placeholder);
+        et.setTextSize(14f);
+        et.setBackground(getResources().getDrawable(R.drawable.bg_input_field));
+        et.setPadding(dp(12), dp(10), dp(12), dp(10));
+        et.setLayoutParams(new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        parent.addView(et);
+        return et;
+    }
+
+    // ── GHN Create Order API ───────────────────────────────────────────────────
+    private String createGhnOrder(String token, String shopId,
+            String recipientName, String phone, String address, String district,
+            String toProvince, int weightGram, int codAmount) throws Exception {
+        int toProvId = GHN_PROVINCE_ID.getOrDefault(toProvince, 202);
+        int toDist   = provinceToGhnDistrict(toProvId);
+
+        org.json.JSONObject body = new org.json.JSONObject();
+        body.put("to_name",        recipientName);
+        body.put("to_phone",       phone);
+        body.put("to_address",     address + ", " + district);
+        body.put("to_ward_code",   "");
+        body.put("to_district_id", toDist);
+        body.put("weight",         weightGram);
+        body.put("length",         20);
+        body.put("width",          15);
+        body.put("height",         10);
+        body.put("service_type_id", 2);
+        body.put("payment_type_id", 1);
+        body.put("cod_amount",      codAmount);
+        body.put("required_note",   "CHOXEMHANGKHONGTHU");
+
+        org.json.JSONArray items = new org.json.JSONArray();
+        org.json.JSONObject item = new org.json.JSONObject();
+        item.put("name",     "Hàng hóa");
+        item.put("quantity", 1);
+        item.put("weight",   weightGram);
+        items.put(item);
+        body.put("items", items);
+
+        String resp = post(GHN_CREATE_URL, body.toString(),
+            "Token", token, "ShopId", shopId);
+        return new org.json.JSONObject(resp).getJSONObject("data").getString("order_code");
+    }
+
+    // ── GHTK Create Order API ──────────────────────────────────────────────────
+    private String createGhtkOrder(String token,
+            String recipientName, String phone, String address, String district,
+            String fromProvince, String toProvince, int weightGram, int codAmount) throws Exception {
+        org.json.JSONObject orderObj = new org.json.JSONObject();
+        orderObj.put("id",            "MPOS-" + System.currentTimeMillis());
+        orderObj.put("pick_name",     "Cửa hàng");
+        orderObj.put("pick_address",  "Địa chỉ lấy hàng");
+        orderObj.put("pick_province", fromProvince);
+        orderObj.put("pick_district", fromProvince);
+        orderObj.put("pick_tel",      "0900000000");
+        orderObj.put("tel",           phone);
+        orderObj.put("name",          recipientName);
+        orderObj.put("address",       address);
+        orderObj.put("province",      toProvince);
+        orderObj.put("district",      district);
+        orderObj.put("weight",        weightGram);
+        orderObj.put("value",         codAmount);
+        orderObj.put("pick_money",    codAmount);
+        orderObj.put("note",          "");
+
+        org.json.JSONArray products = new org.json.JSONArray();
+        org.json.JSONObject p = new org.json.JSONObject();
+        p.put("name", "Hàng hóa"); p.put("weight", weightGram); p.put("quantity", 1);
+        products.put(p);
+
+        org.json.JSONObject body = new org.json.JSONObject();
+        body.put("order",    orderObj);
+        body.put("products", products);
+
+        String resp = post(GHTK_CREATE_URL, body.toString(), "Token", token);
+        org.json.JSONObject json = new org.json.JSONObject(resp);
+        return json.getJSONObject("order").getString("label");
     }
 
     // ── Order tracking ────────────────────────────────────────────────────────
@@ -628,14 +814,31 @@ public class ShippingActivity extends AppCompatActivity {
         progressTrack.setVisibility(View.VISIBLE);
         layoutTrackResult.setVisibility(View.GONE);
 
-        String ghnToken = getPrefs().getString(KEY_GHN_TOKEN, "");
+        String ghnToken  = getPrefs().getString(KEY_GHN_TOKEN, "");
+        String ghtkToken = getPrefs().getString(KEY_GHTK_TOKEN, "");
+        String vtpToken  = getPrefs().getString(KEY_VTP_TOKEN, "");
+
         new Thread(() -> {
-            TrackResult result = !ghnToken.isEmpty()
-                ? trackGhn(ghnToken, code)
-                : mockTrack(code);
+            TrackResult result;
+            // Auto-detect carrier from code prefix, or try each API
+            if (code.startsWith("J") && !ghnToken.isEmpty()) {
+                result = trackGhn(ghnToken, code);
+            } else if ((code.startsWith("S") || code.startsWith("GHTK")) && !ghtkToken.isEmpty()) {
+                result = trackGhtk(ghtkToken, code);
+            } else if ((code.startsWith("VTP") || code.startsWith("8")) && !vtpToken.isEmpty()) {
+                result = trackVtp(vtpToken, code);
+            } else if (!ghnToken.isEmpty()) {
+                result = trackGhn(ghnToken, code);
+            } else {
+                result = mockTrack(code);
+            }
             runOnUiThread(() -> {
                 progressTrack.setVisibility(View.GONE);
-                showTrackResult(result);
+                // Open full tracking screen
+                android.content.Intent intent = new android.content.Intent(this, TrackingDetailActivity.class);
+                intent.putExtra("tracking_code", result.code);
+                intent.putExtra("carrier",       result.carrier);
+                startActivity(intent);
             });
         }).start();
     }
@@ -652,6 +855,49 @@ public class ShippingActivity extends AppCompatActivity {
             return new TrackResult(orderCode, "GHN", statusLabel(status), updated, true);
         } catch (Exception e) {
             return new TrackResult(orderCode, "GHN", "Không tìm thấy", "—", true);
+        }
+    }
+
+    private TrackResult trackGhtk(String token, String labelId) {
+        try {
+            URL url = new URL(GHTK_TRACK_URL + labelId);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("Token", token);
+            conn.setConnectTimeout(15000); conn.setReadTimeout(15000);
+            StringBuilder sb = new StringBuilder();
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream()))) {
+                String line; while ((line = br.readLine()) != null) sb.append(line);
+            }
+            JSONObject json  = new JSONObject(sb.toString());
+            JSONObject data  = json.getJSONObject("shipment_tracking");
+            String status    = data.optString("status_text", "—");
+            String updated   = data.optString("updated_date", "—");
+            return new TrackResult(labelId, "GHTK", status, updated, true);
+        } catch (Exception e) {
+            return new TrackResult(labelId, "GHTK", "Không tìm thấy", "—", true);
+        }
+    }
+
+    private TrackResult trackVtp(String token, String orderNumber) {
+        try {
+            URL url = new URL(VTP_TRACK_URL + orderNumber);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("Authorization", "Bearer " + token);
+            conn.setConnectTimeout(15000); conn.setReadTimeout(15000);
+            StringBuilder sb = new StringBuilder();
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream()))) {
+                String line; while ((line = br.readLine()) != null) sb.append(line);
+            }
+            JSONObject json  = new JSONObject(sb.toString());
+            JSONObject data  = json.optJSONObject("data");
+            if (data == null) throw new Exception("no data");
+            String status    = data.optString("ORDER_STATUSDESCRIPTION", "—");
+            String updated   = data.optString("LAST_UPDATE", "—");
+            return new TrackResult(orderNumber, "ViettelPost", status, updated, true);
+        } catch (Exception e) {
+            return new TrackResult(orderNumber, "ViettelPost", "Không tìm thấy", "—", true);
         }
     }
 
@@ -768,9 +1014,29 @@ public class ShippingActivity extends AppCompatActivity {
 
     // ── HTTP helper ───────────────────────────────────────────────────────────
 
+    private static SSLContext trustAllSslContext() {
+        try {
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, new TrustManager[]{new X509TrustManager() {
+                public void checkClientTrusted(X509Certificate[] c, String a) {}
+                public void checkServerTrusted(X509Certificate[] c, String a) {}
+                public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
+            }}, new SecureRandom());
+            return sc;
+        } catch (Exception e) { return null; }
+    }
+
     private String post(String urlStr, String body, String... headers) throws Exception {
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        // Carrier dev endpoints use certificates not in Android's trust store — bypass for SDK.
+        if (conn instanceof HttpsURLConnection) {
+            SSLContext sc = trustAllSslContext();
+            if (sc != null) {
+                ((HttpsURLConnection) conn).setSSLSocketFactory(sc.getSocketFactory());
+                ((HttpsURLConnection) conn).setHostnameVerifier((h, s) -> true);
+            }
+        }
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", "application/json");
         for (int i = 0; i < headers.length - 1; i += 2)

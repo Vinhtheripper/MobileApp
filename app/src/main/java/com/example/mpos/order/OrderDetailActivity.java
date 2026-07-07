@@ -13,7 +13,8 @@ import androidx.core.content.ContextCompat;
 
 import com.example.mpos.R;
 import com.example.mpos.database.DatabaseHelper;
-import com.example.mpos.logistics.ShippingActivity;
+import com.example.mpos.logistics.CreateShippingOrderActivity;
+import com.example.mpos.receipt.ReceiptActivity;
 import com.example.mpos.utils.CurrencyUtils;
 
 import java.text.SimpleDateFormat;
@@ -21,18 +22,47 @@ import java.util.Date;
 import java.util.Locale;
 
 public class OrderDetailActivity extends AppCompatActivity {
+    private long currentOrderId = -1;
+
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.activity_order_detail);
-        long orderId = getIntent().getLongExtra("order_id", -1);
+        currentOrderId = getIntent().getLongExtra("order_id", -1);
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-        if (orderId >= 0) loadOrder(orderId);
-        findViewById(R.id.btnShipOrder).setOnClickListener(v -> {
-            Intent intent = new Intent(this, ShippingActivity.class);
-            intent.putExtra("weight", "1");
+        if (currentOrderId >= 0) loadOrder(currentOrderId);
+        findViewById(R.id.btnShipOrder).setOnClickListener(v -> openCreateShipping());
+        findViewById(R.id.btnViewReceipt).setOnClickListener(v -> openReceipt());
+    }
+
+    private void openReceipt() {
+        if (currentOrderId < 0) return;
+        Intent intent = new Intent(this, ReceiptActivity.class);
+        intent.putExtra("order_id", currentOrderId);
+        intent.putExtra("from_history", true);
+        startActivity(intent);
+    }
+
+    private void openCreateShipping() {
+        if (currentOrderId < 0) return;
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        android.database.Cursor c = dbHelper.getReadableDatabase().rawQuery(
+            "SELECT o.order_code, o.total_amount, " +
+            "(SELECT COUNT(*) FROM order_items WHERE order_id=o.id) AS item_count " +
+            "FROM orders o WHERE o.id=?",
+            new String[]{String.valueOf(currentOrderId)});
+        try {
+            if (!c.moveToFirst()) return;
+            String orderCode = c.getString(0);
+            long   codAmount = c.getLong(1);
+            int    itemCount = c.getInt(2);
+            Intent intent = new Intent(this, CreateShippingOrderActivity.class);
+            intent.putExtra("order_id",    currentOrderId);
+            intent.putExtra("cod_amount",  codAmount);
+            intent.putExtra("item_count",  itemCount);
+            intent.putExtra("order_code",  orderCode);
             startActivity(intent);
-        });
+        } finally { c.close(); dbHelper.close(); }
     }
 
     private void loadOrder(long orderId) {
@@ -58,7 +88,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.txtDetailTitle)).setText(code);
             ((TextView) findViewById(R.id.txtDetailCode)).setText(code);
             ((TextView) findViewById(R.id.txtDetailDate)).setText(sdf.format(new Date(createdAt)));
-            ((TextView) findViewById(R.id.txtDetailChannel)).setText(channel != null ? channel : "POS");
+            ((TextView) findViewById(R.id.txtDetailChannel)).setText(channelLabel(channel));
             ((TextView) findViewById(R.id.txtDetailStaff)).setText(staff != null ? staff : "—");
             ((TextView) findViewById(R.id.txtDetailSubtotal)).setText(CurrencyUtils.vnd(subtotal));
             ((TextView) findViewById(R.id.txtDetailTax)).setText(CurrencyUtils.vnd(vatAmt));
@@ -180,5 +210,17 @@ public class OrderDetailActivity extends AppCompatActivity {
             default:        return m;
         }
     }
+    private String channelLabel(String ch) {
+        if (ch == null) return "Tại quầy";
+        switch (ch) {
+            case "WALK_IN":  return "🏪 Tại quầy";
+            case "ORDER":    return "📱 Đặt qua MXH";
+            case "FACEBOOK": return "📘 Facebook";
+            case "ZALO":     return "💬 Zalo";
+            case "SHOPEE":   return "🛍 Shopee";
+            default:         return ch;
+        }
+    }
+
     private int dp(int dp) { return Math.round(dp * getResources().getDisplayMetrics().density); }
 }

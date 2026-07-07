@@ -6,10 +6,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.TreeMap;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.net.ssl.HttpsURLConnection;
@@ -17,49 +17,43 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-/** Shopee Open Platform API v2 helper — HMAC-SHA256 signed requests. */
-public class ShopeeApiHelper {
+/** TikTok Shop Open API helper — HMAC-SHA256 signed requests. */
+public class TikTokApiHelper {
 
-    private static final String BASE = "https://partner.shopeemobile.com";
+    private static final String BASE = "https://open-api.tiktokglobalshop.com";
 
-    private final long   partnerId;
-    private final String partnerKey;
-    private final long   shopId;
+    private final String appKey;
+    private final String appSecret;
     private final String accessToken;
 
-    public ShopeeApiHelper(long partnerId, String partnerKey, long shopId, String accessToken) {
-        this.partnerId   = partnerId;
-        this.partnerKey  = partnerKey;
-        this.shopId      = shopId;
+    public TikTokApiHelper(String appKey, String appSecret, String accessToken) {
+        this.appKey      = appKey;
+        this.appSecret   = appSecret;
         this.accessToken = accessToken;
     }
 
-    /** Verify credentials — returns shop name if OK, throws if invalid. */
+    /** Verify credentials — returns shop name, throws if invalid. */
     public String verifyAndGetShopName() throws Exception {
-        JSONObject resp = get("/api/v2/shop/get_shop_info", "");
-        int error = resp.optInt("error", -1);
-        if (error != 0) {
+        JSONObject resp = get("/api/seller/global/seller_info", new TreeMap<>());
+        int code = resp.optInt("code", -1);
+        if (code != 0) {
             String msg = resp.optString("message", "Xác thực thất bại");
-            throw new Exception(msg);
+            throw new Exception("TikTok: " + msg + " (code=" + code + ")");
         }
-        JSONObject data = resp.optJSONObject("response");
-        return data != null ? data.optString("shop_name", "Shopee Shop") : "Shopee Shop";
+        JSONObject data = resp.optJSONObject("data");
+        if (data == null) throw new Exception("Không lấy được thông tin shop TikTok");
+        return data.optString("shop_name", data.optString("name", "TikTok Shop"));
     }
 
-    /** Fetch order list for a time range (unix seconds). Returns raw JSON. */
+    /** Fetch orders created in the given time range (unix seconds). */
     public JSONObject getOrderList(long timeFrom, long timeTo) throws Exception {
-        String extra = "&time_range_field=create_time"
-            + "&time_from=" + timeFrom
-            + "&time_to="   + timeTo
-            + "&page_size=100";
-        return get("/api/v2/order/get_order_list", extra);
-    }
-
-    /** Batch fetch order details for up to 50 comma-separated SNs. */
-    public JSONObject getOrderDetail(String commaSeparatedSns) throws Exception {
-        String extra = "&order_sn_list=" + URLEncoder.encode(commaSeparatedSns, "UTF-8")
-            + "&response_optional_fields=pay_time,buyer_username";
-        return get("/api/v2/order/get_order_detail", extra);
+        TreeMap<String, String> params = new TreeMap<>();
+        params.put("create_time_from", String.valueOf(timeFrom));
+        params.put("create_time_to",   String.valueOf(timeTo));
+        params.put("page_size",        "50");
+        params.put("sort_type",        "1");
+        params.put("sort_by",          "create_time");
+        return get("/api/orders/search", params);
     }
 
     // ─── SSL helper ──────────────────────────────────────────────────────────
@@ -80,19 +74,23 @@ public class ShopeeApiHelper {
 
     // ─── HTTP ────────────────────────────────────────────────────────────────
 
-    private JSONObject get(String path, String extraParams) throws Exception {
+    private JSONObject get(String path, TreeMap<String, String> extraParams) throws Exception {
         trustAllCerts();
-        long ts   = System.currentTimeMillis() / 1000;
-        String sign = sign(path, ts);
-        String urlStr = BASE + path
-            + "?partner_id="   + partnerId
-            + "&timestamp="    + ts
-            + "&sign="         + sign
-            + "&shop_id="      + shopId
-            + "&access_token=" + accessToken
-            + extraParams;
+        long ts = System.currentTimeMillis() / 1000;
+        extraParams.put("app_key",      appKey);
+        extraParams.put("timestamp",    String.valueOf(ts));
+        extraParams.put("access_token", accessToken);
+        extraParams.put("sign",         sign(path, extraParams, ts));
 
-        URL url = new URL(urlStr);
+        StringBuilder query = new StringBuilder();
+        for (java.util.Map.Entry<String, String> e : extraParams.entrySet()) {
+            if (query.length() > 0) query.append("&");
+            query.append(java.net.URLEncoder.encode(e.getKey(), "UTF-8"))
+                 .append("=")
+                 .append(java.net.URLEncoder.encode(e.getValue(), "UTF-8"));
+        }
+
+        URL url = new URL(BASE + path + "?" + query);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-Type", "application/json");
@@ -111,11 +109,19 @@ public class ShopeeApiHelper {
 
     // ─── Signature ───────────────────────────────────────────────────────────
 
-    private String sign(String path, long timestamp) throws Exception {
-        // Shopee v2 signature: HMAC-SHA256(partnerKey, "{partnerId}{path}{ts}{accessToken}{shopId}")
-        String base = partnerId + path + timestamp + accessToken + shopId;
+    private String sign(String path, TreeMap<String, String> params, long ts) throws Exception {
+        // TikTok Shop v1 signature:
+        // sorted_params = sorted non-special query string (exclude sign, access_token)
+        // base = appSecret + path + sortedKV + appSecret
+        StringBuilder paramStr = new StringBuilder();
+        for (java.util.Map.Entry<String, String> e : params.entrySet()) {
+            String k = e.getKey();
+            if ("sign".equals(k) || "access_token".equals(k)) continue;
+            paramStr.append(k).append(e.getValue());
+        }
+        String base = appSecret + path + paramStr + appSecret;
         Mac mac = Mac.getInstance("HmacSHA256");
-        mac.init(new SecretKeySpec(partnerKey.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+        mac.init(new SecretKeySpec(appSecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
         byte[] hash = mac.doFinal(base.getBytes(StandardCharsets.UTF_8));
         StringBuilder hex = new StringBuilder();
         for (byte b : hash) hex.append(String.format("%02x", b));

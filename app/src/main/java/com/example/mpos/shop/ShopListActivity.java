@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mpos.MainActivity;
 import com.example.mpos.R;
-import com.example.mpos.StaffDashboardActivity;
 import com.example.mpos.auth.LoginActivity;
 import com.example.mpos.auth.SessionManager;
 import com.example.mpos.dao.ShopDao;
@@ -76,10 +75,9 @@ public class ShopListActivity extends AppCompatActivity {
     private void enterShop(Shop shop) {
         if (shop == null) return;
         session.saveShop(shop.id, shop.name, shop.memberRole != null ? shop.memberRole : "STAFF");
+        com.example.mpos.auth.FirebaseAuthHelper.onShopSelected(shop.id);
 
-        String role = session.getUser().role;
-        Class<?> dest = "STAFF".equals(role) ? StaffDashboardActivity.class : MainActivity.class;
-        startActivity(new Intent(this, dest)
+        startActivity(new Intent(this, MainActivity.class)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 

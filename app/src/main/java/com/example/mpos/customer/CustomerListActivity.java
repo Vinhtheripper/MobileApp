@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mpos.R;
@@ -44,6 +45,22 @@ public class CustomerListActivity extends AppCompatActivity {
             Intent i = new Intent(this, CustomerDetailActivity.class);
             i.putExtra("customer_id", items.get(x).id);
             startActivity(i);
+        });
+        list.setOnItemLongClickListener((p, v, x, id) -> {
+            if (items.isEmpty()) return false;
+            Customer c = items.get(x);
+            String name = (c.fullName != null) ? c.fullName : c.phone;
+            new AlertDialog.Builder(this)
+                .setTitle("Xóa khách hàng")
+                .setMessage("Xóa " + name + "? Thao tác không thể hoàn tác.")
+                .setPositiveButton("Xóa", (d, w) -> {
+                    dao.delete(c.id);
+                    android.widget.Toast.makeText(this, "Đã xóa " + name, android.widget.Toast.LENGTH_SHORT).show();
+                    load();
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+            return true;
         });
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());

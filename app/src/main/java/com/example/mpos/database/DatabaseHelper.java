@@ -84,5 +84,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 13) {
             db.execSQL("ALTER TABLE products ADD COLUMN description TEXT");
         }
+        if (oldVersion < 14) {
+            db.execSQL("ALTER TABLE shipping_orders ADD COLUMN recipient_name TEXT");
+            db.execSQL("ALTER TABLE shipping_orders ADD COLUMN recipient_phone TEXT");
+            db.execSQL("ALTER TABLE shipping_orders ADD COLUMN recipient_address TEXT");
+            db.execSQL("ALTER TABLE shipping_orders ADD COLUMN recipient_district TEXT");
+            db.execSQL("ALTER TABLE shipping_orders ADD COLUMN cod_amount INTEGER NOT NULL DEFAULT 0");
+        }
     }
 }

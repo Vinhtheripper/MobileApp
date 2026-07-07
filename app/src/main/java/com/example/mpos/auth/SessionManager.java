@@ -31,12 +31,17 @@ public class SessionManager {
 
     public boolean hasShopSelected() { return preferences.getLong("shop_id", -1) > 0; }
 
+    public void saveSelectedRole(String role) {
+        preferences.edit().putString("selected_role", role).apply();
+    }
+
     public User getUser() {
         User user = new User();
         user.id = preferences.getLong("id", -1);
         user.employeeId = preferences.getLong("employee", -1);
         user.username = preferences.getString("name", "");
-        user.role = preferences.getString("role", "STAFF");
+        String selected = preferences.getString("selected_role", "");
+        user.role = selected.isEmpty() ? preferences.getString("role", "STAFF") : selected;
         return user;
     }
 

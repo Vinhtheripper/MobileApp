@@ -39,8 +39,8 @@ public class OmnichannelActivity extends AppCompatActivity {
 
     private static final String[] CHANNEL_KEYS  = {"shopee",    "tiktok",      "lazada"};
     private static final String[] CHANNEL_NAMES = {"Shopee",    "TikTok Shop", "Lazada"};
-    private static final int[]    CHANNEL_COLOR  = {0xFFEE4D2D, 0xFF161823,    0xFF0F146D};
-    private static final int[]    CHANNEL_LIGHT  = {0xFFFFF3F0, 0xFFF5F5F5,   0xFFF0F0FF};
+    private static final int[]    CHANNEL_COLOR  = {0xFFEE4D2D, 0xFFFE2C55,    0xFF0F146D};
+    private static final int[]    CHANNEL_LIGHT  = {0xFFFFF3F0, 0xFFFFF0F3,    0xFFF0F0FF};
     private static final String[] CHANNEL_INIT   = {"S",        "T",           "L"};
 
     private LinearLayout layoutChannels, layoutOrders, layoutFilterChips;
@@ -197,22 +197,25 @@ public class OmnichannelActivity extends AppCompatActivity {
         btnPrimary.setPadding(dp(14), dp(8), dp(14), dp(8));
         btnPrimary.setClickable(true);
         btnPrimary.setFocusable(true);
+        boolean isTikTokCard = "tiktok".equals(key);
         btnPrimary.setOnClickListener(v -> {
             if (connected) showManageDialog(key, name, shopName, shopIdStr);
             else if (isShopee) showShopeeConnectDialog();
+            else if (isTikTokCard) showTikTokConnectDialog();
             else showGenericConnectDialog(key, name, color);
         });
         row.addView(btnPrimary);
         card.addView(row);
 
-        // Shopee sync button (only when connected)
-        if (isShopee && connected) {
+        // Sync button for Shopee or TikTok when connected
+        boolean isTikTok = "tiktok".equals(key);
+        if ((isShopee || isTikTok) && connected) {
             TextView btnSync = new TextView(this);
-            btnSync.setText("↻  Đồng bộ đơn hàng từ Shopee");
+            btnSync.setText("↻  Đồng bộ đơn hàng từ " + name);
             btnSync.setTextSize(13f);
             btnSync.setTypeface(null, Typeface.BOLD);
-            btnSync.setTextColor(0xFFEE4D2D);
-            btnSync.setBackground(rounded(0xFFFFF3F0, 10));
+            btnSync.setTextColor(color);
+            btnSync.setBackground(rounded(light, 10));
             btnSync.setGravity(Gravity.CENTER);
             LinearLayout.LayoutParams slp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, dp(42));
@@ -220,7 +223,10 @@ public class OmnichannelActivity extends AppCompatActivity {
             btnSync.setLayoutParams(slp);
             btnSync.setClickable(true);
             btnSync.setFocusable(true);
-            btnSync.setOnClickListener(v -> syncShopeeOrders());
+            btnSync.setOnClickListener(v -> {
+                if (isShopee) syncShopeeOrders();
+                else syncTikTokOrders();
+            });
             card.addView(btnSync);
         }
 
@@ -460,7 +466,212 @@ public class OmnichannelActivity extends AppCompatActivity {
         }
     }
 
-    // ─── Generic connect (TikTok / Lazada) ───────────────────────────────────
+    // ─── TikTok connect ───────────────────────────────────────────────────────
+
+    private void showTikTokConnectDialog() {
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setPadding(dp(24), dp(12), dp(24), dp(4));
+
+        TextView hint = new TextView(this);
+        hint.setText("Lấy thông tin tại: partner.tiktokshop.com\n→ App Management → App Key / Secret");
+        hint.setTextSize(12f);
+        hint.setTextColor(0xFFFE2C55);
+        hint.setPadding(0, 0, 0, dp(14));
+        root.addView(hint);
+
+        SharedPreferences p = prefs();
+        EditText etKey    = makeInput(root, "App Key");
+        EditText etSecret = makeInput(root, "App Secret");
+        EditText etTok    = makeInput(root, "Access Token");
+        EditText etName   = makeInput(root, "Tên gian hàng (nếu xác thực thất bại)");
+
+        String savedKey = p.getString("tiktok_app_key", "");
+        String savedSec = p.getString("tiktok_app_secret", "");
+        String savedTok = p.getString("tiktok_token", "");
+        if (!savedKey.isEmpty()) etKey.setText(savedKey);
+        if (!savedSec.isEmpty()) etSecret.setText(savedSec);
+        if (!savedTok.isEmpty()) etTok.setText(savedTok);
+
+        new AlertDialog.Builder(this)
+            .setTitle("Kết nối TikTok Shop")
+            .setView(root)
+            .setPositiveButton("Xác thực & Kết nối", (d, w) -> {
+                String keyStr = etKey.getText().toString().trim();
+                String secStr = etSecret.getText().toString().trim();
+                String tokStr = etTok.getText().toString().trim();
+                String nm     = etName.getText().toString().trim();
+                if (keyStr.isEmpty() || tokStr.isEmpty()) {
+                    Toast.makeText(this, "Nhập App Key và Access Token", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                verifyTikTokAndSave(keyStr, secStr, tokStr, nm);
+            })
+            .setNegativeButton("Hủy", null)
+            .show();
+    }
+
+    private void verifyTikTokAndSave(String key, String secret, String tok, String fallbackName) {
+        ProgressDialog prog = new ProgressDialog(this);
+        prog.setMessage("Đang xác thực với TikTok Shop...");
+        prog.setCancelable(false);
+        prog.show();
+
+        new Thread(() -> {
+            String shopName = fallbackName.isEmpty() ? "TikTok Shop" : fallbackName;
+            boolean verified = false;
+            String errMsg = null;
+            if (!secret.isEmpty()) {
+                try {
+                    TikTokApiHelper api = new TikTokApiHelper(key, secret, tok);
+                    shopName = api.verifyAndGetShopName();
+                    verified = true;
+                } catch (Exception e) {
+                    errMsg = e.getMessage();
+                }
+            }
+            final boolean ok = verified || !secret.isEmpty() == false || !fallbackName.isEmpty();
+            final String finalName = shopName;
+            final String finalErr  = errMsg;
+            runOnUiThread(() -> {
+                prog.dismiss();
+                prefs().edit()
+                    .putBoolean("tiktok_connected",   true)
+                    .putString("tiktok_app_key",      key)
+                    .putString("tiktok_app_secret",   secret)
+                    .putString("tiktok_token",        tok)
+                    .putString("tiktok_shop_name",    finalName)
+                    .putLong("tiktok_connected_at",   System.currentTimeMillis())
+                    .apply();
+                if (finalErr != null) {
+                    Toast.makeText(this, "Đã lưu (xác thực lỗi: " + finalErr.substring(0, Math.min(finalErr.length(), 60)) + ")", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Kết nối TikTok Shop thành công: " + finalName, Toast.LENGTH_SHORT).show();
+                }
+                buildChannelCards();
+            });
+        }).start();
+    }
+
+    // ─── TikTok order sync ────────────────────────────────────────────────────
+
+    private void syncTikTokOrders() {
+        SharedPreferences p = prefs();
+        String key    = p.getString("tiktok_app_key", "");
+        String secret = p.getString("tiktok_app_secret", "");
+        String tok    = p.getString("tiktok_token", "");
+
+        if (key.isEmpty() || tok.isEmpty()) {
+            Toast.makeText(this, "Chưa có thông tin API TikTok", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (secret.isEmpty()) {
+            Toast.makeText(this, "Cần App Secret để đồng bộ đơn hàng", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ProgressDialog prog = new ProgressDialog(this);
+        prog.setMessage("Đang lấy đơn hàng từ TikTok Shop (15 ngày)...");
+        prog.setCancelable(false);
+        prog.show();
+
+        new Thread(() -> {
+            try {
+                TikTokApiHelper api = new TikTokApiHelper(key, secret, tok);
+                long now  = System.currentTimeMillis() / 1000;
+                long from = now - 15L * 24 * 3600;
+
+                JSONObject resp = api.getOrderList(from, now);
+                int code = resp.optInt("code", -1);
+                if (code != 0) {
+                    String msg = resp.optString("message", "Lỗi không xác định");
+                    throw new Exception("TikTok API: " + msg + " (code=" + code + ")");
+                }
+
+                JSONObject data = resp.optJSONObject("data");
+                if (data == null) throw new Exception("Không có dữ liệu trả về từ TikTok");
+
+                org.json.JSONArray orders = data.optJSONArray("order_list");
+                if (orders == null || orders.length() == 0) {
+                    runOnUiThread(() -> { prog.dismiss();
+                        Toast.makeText(this, "Không có đơn hàng mới từ TikTok", Toast.LENGTH_SHORT).show(); });
+                    return;
+                }
+
+                int newCount = 0;
+                long shopId  = session.getShopId();
+                long userId  = session.getUser() != null ? session.getUser().id : 1;
+                android.database.sqlite.SQLiteDatabase wdb = db.getWritableDatabase();
+
+                for (int i = 0; i < orders.length(); i++) {
+                    JSONObject o   = orders.getJSONObject(i);
+                    String orderId = o.optString("order_id", o.optString("order_sn", ""));
+                    String status  = mapTikTokStatus(o.optString("order_status", ""));
+                    long amount    = (long) o.optDouble("payment_info_sub_total",
+                        o.optDouble("total_amount", 0));
+                    long createSec = o.optLong("create_time", System.currentTimeMillis() / 1000);
+
+                    android.content.ContentValues cv = new android.content.ContentValues();
+                    cv.put("order_code",      "TTK-" + orderId);
+                    cv.put("user_id",         userId);
+                    cv.put("shop_id",         shopId);
+                    cv.put("channel",         "TIKTOK");
+                    cv.put("status",          status);
+                    cv.put("subtotal",        amount);
+                    cv.put("discount_amount", 0);
+                    cv.put("vat_percent",     0);
+                    cv.put("vat_amount",      0);
+                    cv.put("total_amount",    amount);
+                    cv.put("note",            "TikTok #" + orderId);
+                    cv.put("created_at",      createSec * 1000L);
+                    cv.put("updated_at",      System.currentTimeMillis());
+
+                    long result = wdb.insertWithOnConflict(
+                        "orders", null, cv, android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE);
+                    if (result > 0) newCount++;
+                }
+
+                final int finalNew = newCount;
+                runOnUiThread(() -> {
+                    prog.dismiss();
+                    Toast.makeText(this,
+                        finalNew > 0
+                            ? "Đã đồng bộ " + finalNew + " đơn mới từ TikTok Shop"
+                            : "Không có đơn mới (tất cả đã đồng bộ)",
+                        Toast.LENGTH_LONG).show();
+                    loadOrders("TIKTOK");
+                    activeFilter = "TIKTOK";
+                    buildFilterChips();
+                    switchTab(1);
+                });
+
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    prog.dismiss();
+                    new AlertDialog.Builder(this)
+                        .setTitle("Lỗi đồng bộ TikTok")
+                        .setMessage(e.getMessage() + "\n\nKiểm tra App Key, App Secret và Access Token.")
+                        .setPositiveButton("OK", null)
+                        .show();
+                });
+            }
+        }).start();
+    }
+
+    private String mapTikTokStatus(String s) {
+        if (s == null) return "PENDING";
+        switch (s.toUpperCase(java.util.Locale.ROOT)) {
+            case "COMPLETED":        return "COMPLETED";
+            case "CANCELLED":        return "CANCELLED";
+            case "IN_TRANSIT":
+            case "PARTIALLY_SHIPPED":
+            case "AWAITING_SHIPMENT":
+            case "AWAITING_COLLECTION": return "PROCESSING";
+            default:                 return "PENDING";
+        }
+    }
+
+    // ─── Generic connect (Lazada only now) ───────────────────────────────────
 
     private void showGenericConnectDialog(String key, String name, int color) {
         LinearLayout root = new LinearLayout(this);
@@ -468,7 +679,7 @@ public class OmnichannelActivity extends AppCompatActivity {
         root.setPadding(dp(24), dp(12), dp(24), dp(4));
 
         TextView hint = new TextView(this);
-        hint.setText("Nhập Access Token từ " + name + " Seller Portal.\nChức năng đồng bộ đơn hàng đang phát triển.");
+        hint.setText("Nhập Access Token từ " + name + " Seller Portal.");
         hint.setTextSize(12f);
         hint.setTextColor(0xFF64748B);
         hint.setPadding(0, 0, 0, dp(14));

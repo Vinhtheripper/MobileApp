@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,7 +29,25 @@ public class CustomerDetailActivity extends AppCompatActivity {
         findViewById(R.id.btnBack).setOnClickListener(v->finish());
         findViewById(R.id.btnEditCustomer).setOnClickListener(v->{Intent i=new Intent(this,CustomerFormActivity.class);i.putExtra("customer_id",customerId);startActivity(i);});
         findViewById(R.id.btnRepeatOrder).setOnClickListener(v->repeatLastOrder());
+        findViewById(R.id.btnDeleteCustomer).setOnClickListener(v -> confirmDelete());
     }
     private void render(){ long shopId=new com.example.mpos.auth.SessionManager(this).getShopId();Customer customer=new CustomerDao(db,shopId).findById(customerId); long count=0,total=0; Cursor q=db.getReadableDatabase().rawQuery("SELECT COUNT(*),COALESCE(SUM(total_amount),0) FROM orders WHERE customer_id=? AND status='PAID'",new String[]{String.valueOf(customerId)}); try{if(q.moveToFirst()){count=q.getLong(0);total=q.getLong(1);}}finally{q.close();} ((TextView)findViewById(R.id.txtCustomerDetail)).setText(customer==null?"Không tìm thấy khách hàng":customer.fullName+"\n"+customer.phone+"\n"+(customer.email==null?"":customer.email)+"\n\nTổng đơn: "+count+"\nTổng chi tiêu: "+CurrencyUtils.vnd(total)+"\nĐiểm tích lũy: "+customer.loyaltyPoints); }
+    private void confirmDelete() {
+        long shopId = new com.example.mpos.auth.SessionManager(this).getShopId();
+        CustomerDao dao = new CustomerDao(db, shopId);
+        Customer c = dao.findById(customerId);
+        String name = (c != null && c.fullName != null) ? c.fullName : "khách hàng này";
+        new AlertDialog.Builder(this)
+            .setTitle("Xóa khách hàng")
+            .setMessage("Xóa " + name + "? Thao tác không thể hoàn tác.")
+            .setPositiveButton("Xóa", (d, w) -> {
+                dao.delete(customerId);
+                Toast.makeText(this, "Đã xóa " + name, Toast.LENGTH_SHORT).show();
+                finish();
+            })
+            .setNegativeButton("Hủy", null)
+            .show();
+    }
+
     private void repeatLastOrder(){ Cursor last=db.getReadableDatabase().rawQuery("SELECT id FROM orders WHERE customer_id=? ORDER BY created_at DESC LIMIT 1",new String[]{String.valueOf(customerId)}); long orderId=-1;try{if(last.moveToFirst())orderId=last.getLong(0);}finally{last.close();}if(orderId<0){Toast.makeText(this,"Khách chưa có đơn để lặp lại",Toast.LENGTH_SHORT).show();return;}CartManager.get().clear();long shopId2=new com.example.mpos.auth.SessionManager(this).getShopId();ProductDao products=new ProductDao(db,shopId2);Cursor lines=db.getReadableDatabase().rawQuery("SELECT product_id,quantity FROM order_items WHERE order_id=?",new String[]{String.valueOf(orderId)});try{while(lines.moveToNext()){Product p=products.findById(lines.getLong(0));for(int i=0;p!=null&&i<lines.getInt(1);i++)CartManager.get().add(p);}}finally{lines.close();}startActivity(new Intent(this,PosActivity.class)); }
 }

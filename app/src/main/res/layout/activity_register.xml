@@ -2,8 +2,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1E3472"
     android:fitsSystemWindows="true">
+
+    <!-- Topographic background image -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_login_topo"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null"/>
 
     <LinearLayout
         android:layout_width="match_parent"

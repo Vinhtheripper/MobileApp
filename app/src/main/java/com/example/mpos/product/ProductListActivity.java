@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -58,6 +59,21 @@ public class ProductListActivity extends AppCompatActivity {
             Intent i = new Intent(this, ProductFormActivity.class);
             i.putExtra("product_id", prod.id);
             startActivity(i);
+        });
+        list.setOnItemLongClickListener((p, v, pos, id) -> {
+            Product prod = adapter.getItem(pos);
+            if (prod == null) return false;
+            new AlertDialog.Builder(this)
+                .setTitle("Xóa sản phẩm")
+                .setMessage("Xóa \"" + prod.name + "\"? Thao tác không thể hoàn tác.")
+                .setPositiveButton("Xóa", (d, w) -> {
+                    dao.delete(prod.id);
+                    android.widget.Toast.makeText(this, "Đã xóa " + prod.name, android.widget.Toast.LENGTH_SHORT).show();
+                    load();
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+            return true;
         });
 
         searchInput.addTextChangedListener(new TextWatcher() {

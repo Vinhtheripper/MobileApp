@@ -55,9 +55,9 @@ public class ShiftReportActivity extends AppCompatActivity {
         try (Cursor c = new DatabaseHelper(this).getReadableDatabase().rawQuery(
                 "SELECT s.shift_code, s.status, s.opening_cash, s.expected_cash, " +
                 "s.actual_cash, s.difference_amount, s.handover_note, " +
-                "strftime('%H:%M %d/%m', datetime(s.created_at/1000,'unixepoch','localtime')) as open_time, " +
+                "strftime('%H:%M %d/%m', datetime(s.opened_at/1000,'unixepoch','localtime')) as open_time, " +
                 "strftime('%H:%M %d/%m', datetime(s.closed_at/1000,'unixepoch','localtime')) as close_time, " +
-                "u.name as cashier_name " +
+                "u.username as cashier_name " +
                 "FROM shifts s LEFT JOIN users u ON s.user_id = u.id " +
                 "WHERE s.user_id = ? ORDER BY s.id DESC LIMIT 1",
                 new String[]{String.valueOf(userId)})) {
@@ -110,7 +110,7 @@ public class ShiftReportActivity extends AppCompatActivity {
     private void loadRevenueStats(long userId, TextView tvRevenue, TextView tvOrders, TextView tvAvg) {
         try (Cursor c = new DatabaseHelper(this).getReadableDatabase().rawQuery(
                 "SELECT COUNT(*), COALESCE(SUM(total_amount), 0) " +
-                "FROM orders WHERE created_by = ? AND DATE(created_at/1000,'unixepoch') = DATE('now')",
+                "FROM orders WHERE user_id = ? AND DATE(created_at/1000,'unixepoch') = DATE('now')",
                 new String[]{String.valueOf(userId)})) {
 
             if (c != null && c.moveToFirst()) {

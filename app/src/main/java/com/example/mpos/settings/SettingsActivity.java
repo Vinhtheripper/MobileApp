@@ -19,6 +19,75 @@ import com.example.mpos.model.User;
 public class SettingsActivity extends AppCompatActivity {
 
     private SettingsDao dao;
+
+    private void updateAiKeyStatus(android.widget.TextView tv, android.content.SharedPreferences p) {
+        if (tv == null) return;
+        String key = p.getString("claude_api_key", "");
+        if (key.isEmpty()) {
+            tv.setText("Chưa cài đặt");
+            tv.setTextColor(0xFF94A3B8);
+        } else {
+            tv.setText("Đã cài  •  gsk_..." + key.substring(Math.max(0, key.length() - 6)));
+            tv.setTextColor(0xFF10B981);
+        }
+    }
+
+    private void showAiKeyDialog(android.content.SharedPreferences aiPrefs, android.widget.TextView statusTv) {
+        android.widget.EditText et = new android.widget.EditText(this);
+        et.setHint("gsk_...");
+        et.setTextSize(13f);
+        et.setText(aiPrefs.getString("claude_api_key", ""));
+        et.setPadding(dp(20), dp(12), dp(20), dp(12));
+
+        new AlertDialog.Builder(this)
+            .setTitle("Groq API Key")
+            .setMessage("Lấy key miễn phí (không cần thẻ) tại:\nconsole.groq.com → API Keys → Create API key")
+            .setView(et)
+            .setPositiveButton("Lưu", (d, w) -> {
+                String k = et.getText().toString().trim();
+                aiPrefs.edit().putString("claude_api_key", k).apply();
+                updateAiKeyStatus(statusTv, aiPrefs);
+                Toast.makeText(this, k.isEmpty() ? "Đã xóa API key" : "Đã lưu API key", Toast.LENGTH_SHORT).show();
+            })
+            .setNegativeButton("Hủy", null)
+            .show();
+    }
+
+    private int dp(int v) { return Math.round(v * getResources().getDisplayMetrics().density); }
+
+    private void updatePinStatus(android.content.SharedPreferences pinPrefs) {
+        boolean mgrChanged = pinPrefs.contains("pin_manager");
+        boolean admChanged = pinPrefs.contains("pin_admin");
+        android.widget.TextView tvMgr = findViewById(R.id.txtManagerPinStatus);
+        android.widget.TextView tvAdm = findViewById(R.id.txtAdminPinStatus);
+        if (tvMgr != null) tvMgr.setText(mgrChanged ? "Đã đặt mã PIN riêng" : "Mặc định: 1234");
+        if (tvAdm != null) tvAdm.setText(admChanged ? "Đã đặt mã PIN riêng" : "Mặc định: 0000");
+    }
+
+    private void showChangePinDialog(android.content.SharedPreferences pinPrefs, String key,
+                                     String defaultPin, String title) {
+        android.widget.EditText etNew = new android.widget.EditText(this);
+        etNew.setHint("Nhập mã PIN mới (số)");
+        etNew.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        etNew.setPadding(dp(20), dp(12), dp(20), dp(12));
+
+        new AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage("Mã PIN hiện tại: " + pinPrefs.getString(key, defaultPin))
+            .setView(etNew)
+            .setPositiveButton("Lưu", (d, w) -> {
+                String newPin = etNew.getText().toString().trim();
+                if (newPin.length() < 4) {
+                    Toast.makeText(this, "Mã PIN phải có ít nhất 4 số", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                pinPrefs.edit().putString(key, newPin).apply();
+                updatePinStatus(pinPrefs);
+                Toast.makeText(this, "Đã đổi mã PIN thành công", Toast.LENGTH_SHORT).show();
+            })
+            .setNegativeButton("Hủy", null)
+            .show();
+    }
     private EditText inputStoreName, inputVat, inputStoreAddress, inputStorePhone, inputTaxCode;
     private EditText inputBankCode, inputBankAccount, inputBankName;
     private EditText inputEarnRate, inputRedeemRate;
@@ -128,6 +197,27 @@ public class SettingsActivity extends AppCompatActivity {
             dao.put("receipt_footer", inputReceiptFooter.getText().toString().trim());
             Toast.makeText(this, "Đã lưu mẫu hóa đơn", Toast.LENGTH_SHORT).show();
         });
+
+        // AI Chat API key
+        android.content.SharedPreferences aiPrefs = getSharedPreferences("mpos_ai_prefs", android.content.Context.MODE_PRIVATE);
+        android.widget.TextView txtAiKeyStatus = findViewById(R.id.txtAiKeyStatus);
+        updateAiKeyStatus(txtAiKeyStatus, aiPrefs);
+        findViewById(R.id.btnSetAiKey).setOnClickListener(v -> showAiKeyDialog(aiPrefs, txtAiKeyStatus));
+
+        // PIN management (Admin only)
+        android.content.SharedPreferences pinPrefs = getSharedPreferences("mpos_pin_prefs", android.content.Context.MODE_PRIVATE);
+        android.view.View sectionPin = findViewById(R.id.sectionPinManagement);
+        String currentRole = user != null ? user.role : "STAFF";
+        if (sectionPin != null && "ADMIN".equals(currentRole)) {
+            sectionPin.setVisibility(android.view.View.VISIBLE);
+            updatePinStatus(pinPrefs);
+            android.view.View btnMgrPin = findViewById(R.id.btnChangeManagerPin);
+            if (btnMgrPin != null) btnMgrPin.setOnClickListener(v ->
+                showChangePinDialog(pinPrefs, "pin_manager", "1234", "Đổi mã PIN Quản lý"));
+            android.view.View btnAdmPin = findViewById(R.id.btnChangeAdminPin);
+            if (btnAdmPin != null) btnAdmPin.setOnClickListener(v ->
+                showChangePinDialog(pinPrefs, "pin_admin", "0000", "Đổi mã PIN Admin"));
+        }
 
         // Logout
         findViewById(R.id.btnLogout).setOnClickListener(v ->

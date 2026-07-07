@@ -48,16 +48,17 @@
             <!-- Mascot avatar circle -->
             <FrameLayout
                 android:layout_width="46dp"
-                android:layout_height="46dp"
-                android:background="@drawable/bg_chat_mascot_avatar">
+                android:layout_height="46dp">
 
                 <ImageView
                     android:id="@+id/imgChatMascot"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_mascot_png"
-                    android:scaleType="fitCenter"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/bg_chat_mascot_avatar"
+                    android:clipToOutline="true"
                     android:contentDescription="AI Mascot"/>
 
                 <!-- Online dot indicator -->

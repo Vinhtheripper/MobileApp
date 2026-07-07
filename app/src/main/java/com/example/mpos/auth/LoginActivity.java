@@ -1,6 +1,8 @@
 package com.example.mpos.auth;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -36,9 +38,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText inputEmail;
     private EditText inputPassword;
+    private EditText inputPin;
     private TextView txtError;
     private ImageView btnTogglePassword;
     private boolean passwordVisible = false;
+
+    private TextView btnRoleStaff, btnRoleManager, btnRoleAdmin;
+    private View labelPin, pinFieldContainer;
+    private String selectedRole = "STAFF";
 
     private GoogleSignInClient googleSignInClient;
 
@@ -53,7 +60,19 @@ public class LoginActivity extends AppCompatActivity {
 
         inputEmail    = findViewById(R.id.inputEmail);
         inputPassword = findViewById(R.id.inputPassword);
+        inputPin      = findViewById(R.id.inputPin);
         txtError      = findViewById(R.id.txtLoginError);
+
+        btnRoleStaff      = findViewById(R.id.btnRoleStaff);
+        btnRoleManager    = findViewById(R.id.btnRoleManager);
+        btnRoleAdmin      = findViewById(R.id.btnRoleAdmin);
+        labelPin          = findViewById(R.id.labelPin);
+        pinFieldContainer = findViewById(R.id.pinFieldContainer);
+
+        if (btnRoleStaff   != null) btnRoleStaff.setOnClickListener(v   -> selectRole("STAFF"));
+        if (btnRoleManager != null) btnRoleManager.setOnClickListener(v -> selectRole("MANAGER"));
+        if (btnRoleAdmin   != null) btnRoleAdmin.setOnClickListener(v   -> selectRole("ADMIN"));
+        updateRoleButtons();
 
         View btnLogin = findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(v -> doLogin());
@@ -76,7 +95,6 @@ public class LoginActivity extends AppCompatActivity {
             showError("Tính năng đặt lại mật khẩu sẽ sớm được cập nhật")
         );
 
-        // Google Sign-In setup
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.google_web_client_id))
             .requestEmail()
@@ -104,6 +122,39 @@ public class LoginActivity extends AppCompatActivity {
         );
     }
 
+    private void selectRole(String role) {
+        selectedRole = role;
+        updateRoleButtons();
+        boolean needPin = "MANAGER".equals(role) || "ADMIN".equals(role);
+        if (labelPin != null)          labelPin.setVisibility(needPin ? View.VISIBLE : View.GONE);
+        if (pinFieldContainer != null) pinFieldContainer.setVisibility(needPin ? View.VISIBLE : View.GONE);
+        if (!needPin && inputPin != null) inputPin.setText("");
+    }
+
+    private void updateRoleButtons() {
+        styleRoleBtn(btnRoleStaff,   "STAFF".equals(selectedRole));
+        styleRoleBtn(btnRoleManager, "MANAGER".equals(selectedRole));
+        styleRoleBtn(btnRoleAdmin,   "ADMIN".equals(selectedRole));
+    }
+
+    private void styleRoleBtn(TextView btn, boolean selected) {
+        if (btn == null) return;
+        if (selected) {
+            GradientDrawable gd = new GradientDrawable();
+            gd.setColor(0xFF2875FB);
+            gd.setCornerRadius(dp(20));
+            btn.setBackground(gd);
+            btn.setTextColor(0xFFFFFFFF);
+        } else {
+            btn.setBackground(null);
+            btn.setTextColor(0xFF6B7280);
+        }
+    }
+
+    private int dp(int v) {
+        return Math.round(v * getResources().getDisplayMetrics().density);
+    }
+
     private void handleGoogleSignInResult(ActivityResult result) {
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
         try {
@@ -117,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
             loginOrRegisterWithGoogle(email, displayName);
         } catch (ApiException e) {
             int code = e.getStatusCode();
-            if (code == 12501) return; // User cancelled — do nothing
+            if (code == 12501) return;
             showError("Google Sign-In thất bại (mã: " + code + ")");
         }
     }
@@ -149,6 +200,22 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        if ("MANAGER".equals(selectedRole) || "ADMIN".equals(selectedRole)) {
+            String pin = inputPin != null ? inputPin.getText().toString().trim() : "";
+            if (pin.isEmpty()) {
+                showError("Vui lòng nhập mã PIN xác nhận");
+                return;
+            }
+            SharedPreferences pinPrefs = getSharedPreferences("mpos_pin_prefs", MODE_PRIVATE);
+            String storedPin = "MANAGER".equals(selectedRole)
+                ? pinPrefs.getString("pin_manager", "1234")
+                : pinPrefs.getString("pin_admin",   "0000");
+            if (!pin.equals(storedPin)) {
+                showError("Mã PIN không đúng");
+                return;
+            }
+        }
+
         try {
             User user = new UserDao(new DatabaseHelper(this)).login(email, pass);
             if (user == null) {
@@ -156,6 +223,7 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
             txtError.setVisibility(View.GONE);
+            FirebaseAuthHelper.signIn(email, pass, -1);
             navigateAfterLogin(user);
         } catch (Exception e) {
             showError("Lỗi: " + e.getMessage());
@@ -165,6 +233,7 @@ public class LoginActivity extends AppCompatActivity {
     private void navigateAfterLogin(User user) {
         SessionManager session = new SessionManager(this);
         session.save(user);
+        session.saveSelectedRole(selectedRole);
 
         ShopDao shopDao = new ShopDao(new DatabaseHelper(this));
         List<Shop> shops = shopDao.getShopsForUser(user.id);

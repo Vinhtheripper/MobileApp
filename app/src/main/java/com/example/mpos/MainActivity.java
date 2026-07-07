@@ -23,6 +23,7 @@ import com.example.mpos.customer.CustomerListActivity;
 import com.example.mpos.dao.ShopDao;
 import com.example.mpos.database.DatabaseHelper;
 import com.example.mpos.inventory.InventoryActivity;
+import com.example.mpos.logistics.CreateShippingOrderActivity;
 import com.example.mpos.logistics.ShippingActivity;
 import com.example.mpos.model.Shop;
 import com.example.mpos.order.OrderListActivity;
@@ -33,10 +34,13 @@ import com.example.mpos.report.ReportActivity;
 import com.example.mpos.shift.ShiftActivity;
 import com.example.mpos.ui.BottomNavHelper;
 import com.example.mpos.notification.NotificationActivity;
+import com.example.mpos.omnichannel.OmnichannelActivity;
 import com.example.mpos.ui.MoreActivity;
 import com.example.mpos.utils.CurrencyUtils;
 
 import com.example.mpos.dao.OrderDao;
+import com.example.mpos.dao.ShiftDao;
+import com.example.mpos.notification.MposFcmService;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,14 +53,6 @@ public class MainActivity extends AppCompatActivity {
         SessionManager session = new SessionManager(this);
         if (!session.isLoggedIn()) { startActivity(new Intent(this, LoginActivity.class)); finish(); return; }
 
-        // Route STAFF users to their dedicated dashboard
-        com.example.mpos.model.User sessionUser = session.getUser();
-        if (sessionUser != null && "STAFF".equals(sessionUser.role)) {
-            startActivity(new Intent(this, StaffDashboardActivity.class));
-            finish();
-            return;
-        }
-
         // Check shop is selected
         if (!session.hasShopSelected()) {
             startActivity(new Intent(this, ShopListActivity.class));
@@ -67,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         orderDao = new OrderDao(new DatabaseHelper(this), session.getShopId());
         BottomNavHelper.bind(this);
+
+        // Subscribe this device to push notifications for this shop
+        MposFcmService.subscribeToShop(session.getShopId());
 
         com.example.mpos.model.User currentUser = session.getUser();
         String name = currentUser != null ? currentUser.username : "Admin";
@@ -87,35 +86,40 @@ public class MainActivity extends AppCompatActivity {
         TextView txtDate = findViewById(R.id.txtDate);
         if (txtDate != null) txtDate.setText(today);
 
-        // Role-based visibility
         boolean isStaff   = "STAFF".equals(role);
-        boolean isManager = "MANAGER".equals(role);
         boolean isAdmin   = "ADMIN".equals(role);
 
-        setVisible(R.id.btnInventory, !isStaff);
-        setVisible(R.id.btnReports,   !isStaff);
-        setVisible(R.id.btnProducts,  !isStaff);
-        setVisible(R.id.btnMore,      isAdmin);
-
-        // Wire clicks
+        // Wire clicks — all buttons visible for all roles; restricted ones show a notice
         View btnNotificationMain = findViewById(R.id.btnNotification);
         if (btnNotificationMain != null)
             btnNotificationMain.setOnClickListener(v -> startActivity(new Intent(this, NotificationActivity.class)));
         findViewById(R.id.btnNewSale).setOnClickListener(v -> startActivity(new Intent(this, PosActivity.class)));
         findViewById(R.id.btnShift).setOnClickListener(v -> startActivity(new Intent(this, ShiftActivity.class)));
         findViewById(R.id.btnOrders).setOnClickListener(v -> startActivity(new Intent(this, OrderListActivity.class)));
-        if (!isStaff) {
-            findViewById(R.id.btnProducts).setOnClickListener(v -> startActivity(new Intent(this, ProductListActivity.class)));
-            findViewById(R.id.btnInventory).setOnClickListener(v -> startActivity(new Intent(this, InventoryActivity.class)));
-            findViewById(R.id.btnReports).setOnClickListener(v -> startActivity(new Intent(this, ReportActivity.class)));
-        }
-        if (isAdmin) {
-            findViewById(R.id.btnMore).setOnClickListener(v -> startActivity(new Intent(this, MoreActivity.class)));
-        }
+        findViewById(R.id.btnProducts).setOnClickListener(v -> {
+            if (isStaff) { noPermission(); return; }
+            startActivity(new Intent(this, ProductListActivity.class));
+        });
+        findViewById(R.id.btnInventory).setOnClickListener(v -> {
+            if (isStaff) { noPermission(); return; }
+            startActivity(new Intent(this, InventoryActivity.class));
+        });
+        findViewById(R.id.btnReports).setOnClickListener(v -> {
+            if (isStaff) { noPermission(); return; }
+            startActivity(new Intent(this, ReportActivity.class));
+        });
+        findViewById(R.id.btnMore).setOnClickListener(v -> {
+            if (!isAdmin) { noPermission(); return; }
+            startActivity(new Intent(this, MoreActivity.class));
+        });
         findViewById(R.id.btnCustomers).setOnClickListener(v -> startActivity(new Intent(this, CustomerListActivity.class)));
         findViewById(R.id.btnProfile).setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
         findViewById(R.id.btnAiChat).setOnClickListener(v -> startActivity(new Intent(this, AiChatActivity.class)));
-        findViewById(R.id.btnShipping).setOnClickListener(v -> startActivity(new Intent(this, ShippingActivity.class)));
+        findViewById(R.id.btnShipping).setOnClickListener(v -> startActivity(new Intent(this, CreateShippingOrderActivity.class)));
+        View btnViewChannels = findViewById(R.id.btnViewChannels);
+        if (btnViewChannels != null) btnViewChannels.setOnClickListener(v -> startActivity(new Intent(this, OmnichannelActivity.class)));
+        View btnChannelCard = findViewById(R.id.btnChannelCard);
+        if (btnChannelCard != null) btnChannelCard.setOnClickListener(v -> startActivity(new Intent(this, OmnichannelActivity.class)));
         findViewById(R.id.btnLogout).setOnClickListener(v -> doLogout(session));
         // Load event banner async
         android.widget.ImageView imgBanner = findViewById(R.id.imgEventBanner);
@@ -221,6 +225,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void noPermission() {
+        android.widget.Toast.makeText(this, "Bạn không có quyền truy cập chức năng này", android.widget.Toast.LENGTH_SHORT).show();
+    }
+
     private void switchShop(SessionManager session) {
         session.saveShop(-1, "", "");
         startActivity(new Intent(this, ShopListActivity.class));
@@ -228,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void doLogout(SessionManager session) {
+        com.example.mpos.auth.FirebaseAuthHelper.signOut();
         session.clear();
         startActivity(new Intent(this, LoginActivity.class));
         finish();
@@ -244,6 +253,22 @@ public class MainActivity extends AppCompatActivity {
     private void loadStats() {
         if (orderDao == null) return;
         try {
+            // Shift status chip
+            SessionManager sess = new SessionManager(this);
+            long userId = sess.getUser().id;
+            long shopId = sess.getShopId();
+            boolean shiftOpen = new ShiftDao(new DatabaseHelper(this), shopId).getOpenShiftId(userId) > 0;
+            TextView chipShift = findViewById(R.id.txtShiftStatusChip);
+            if (chipShift != null) {
+                chipShift.setTextColor(0xFF1C2333);
+                if (shiftOpen) {
+                    chipShift.setText("Đang mở ca");
+                    chipShift.setBackgroundResource(R.drawable.badge_success);
+                } else {
+                    chipShift.setText("Chưa mở ca");
+                    chipShift.setBackgroundResource(R.drawable.badge_warning);
+                }
+            }
             OrderDao.DailyStats stats = orderDao.getTodayStats();
             TextView tv;
             // Hero card

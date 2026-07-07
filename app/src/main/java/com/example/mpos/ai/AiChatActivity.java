@@ -38,19 +38,27 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.util.Locale;
 
 public class AiChatActivity extends AppCompatActivity {
 
-    private static final String PREFS_AI = "mpos_ai_prefs";
+    private static final String PREFS_AI  = "mpos_ai_prefs";
     private static final String KEY_API_KEY = "claude_api_key";
-    private static final String API_URL = "https://api.anthropic.com/v1/messages";
-    private static final String MODEL = "claude-haiku-4-5";
+    private static final String GROQ_URL  = "https://api.groq.com/openai/v1/chat/completions";
+    private static final String MODEL     = "llama-3.1-8b-instant";
+    private static final String DEFAULT_KEY = "";
 
     private LinearLayout layoutMessages;
     private ScrollView scrollView;
@@ -94,11 +102,7 @@ public class AiChatActivity extends AppCompatActivity {
 
         systemPrompt = buildSystemPrompt();
 
-        if (getApiKey().isEmpty()) {
-            addBotMessage("👋 Xin chào! Tôi là **Quầy AI** - trợ lý kinh doanh thông minh!\n\nVui lòng nhập **Claude API Key** bằng cách nhấn 🔑 góc trên phải để bắt đầu chat với tôi nhé!");
-        } else {
-            addBotMessage("👋 Xin chào! Tôi là **Quầy AI** - trợ lý kinh doanh của bạn!\n\nTôi có thể giúp:\n• 📊 Phân tích doanh thu & hiệu suất\n• 📦 Kiểm tra tồn kho & cảnh báo\n• 💡 Tư vấn chiến lược bán hàng\n• 🤖 Trả lời mọi câu hỏi về cửa hàng\n\nHãy hỏi tôi bất cứ điều gì!");
-        }
+        addBotMessage("👋 Xin chào! Tôi là **Quầy AI** - trợ lý kinh doanh của bạn!\n\nTôi có thể giúp:\n• 📊 Phân tích doanh thu & hiệu suất\n• 📦 Kiểm tra tồn kho & cảnh báo\n• 💡 Tư vấn chiến lược bán hàng\n• 🤖 Trả lời mọi câu hỏi về cửa hàng\n\nHãy hỏi tôi bất cứ điều gì!");
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -188,40 +192,55 @@ public class AiChatActivity extends AppCompatActivity {
             } catch (Exception e) {
                 runOnUiThread(() -> {
                     setLoading(false);
-                    String err = e.getMessage();
-                    if (err != null && err.contains("401")) {
-                        addBotMessage("❌ API Key không hợp lệ. Vui lòng kiểm tra lại bằng cách nhấn 🔑.");
-                    } else if (err != null && err.contains("429")) {
-                        addBotMessage("⚠️ Vượt giới hạn API. Vui lòng thử lại sau vài giây.");
-                    } else {
-                        addBotMessage("❌ Lỗi kết nối: " + err);
-                    }
+                    String err = e.getMessage() != null ? e.getMessage() : "Lỗi không xác định";
+                    addBotMessage("❌ Lỗi API: " + err + "\n\n⚠️ Key Gemini phải lấy tại aistudio.google.com → Get API Key (bắt đầu bằng AIzaSy...)\nNhấn 🔑 để nhập lại key.");
                 });
             }
         }).start();
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // Anthropic API call
+    // Trust-all SSL helper (fixes CertPathValidatorException on some devices)
+
+    private static void trustAllCerts() {
+        try {
+            TrustManager[] tm = new TrustManager[]{new X509TrustManager() {
+                public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
+                public void checkClientTrusted(X509Certificate[] c, String a) {}
+                public void checkServerTrusted(X509Certificate[] c, String a) {}
+            }};
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, tm, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            HttpsURLConnection.setDefaultHostnameVerifier((h, s) -> true);
+        } catch (Exception ignored) {}
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Groq API call (OpenAI-compatible)
 
     private String callClaudeApi() throws Exception {
-        URL url = new URL(API_URL);
+        trustAllCerts();
+
+        URL url = new URL(GROQ_URL);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-        conn.setRequestProperty("x-api-key", getApiKey());
-        conn.setRequestProperty("anthropic-version", "2023-06-01");
+        conn.setRequestProperty("Authorization", "Bearer " + getApiKey());
         conn.setDoOutput(true);
         conn.setConnectTimeout(30000);
         conn.setReadTimeout(60000);
 
+        // Build messages: system + history
+        JSONArray messages = new JSONArray();
+        messages.put(new JSONObject().put("role", "system").put("content", systemPrompt));
+        for (JSONObject m : conversationHistory) messages.put(m);
+
         JSONObject body = new JSONObject();
         body.put("model", MODEL);
+        body.put("messages", messages);
         body.put("max_tokens", 1024);
-        body.put("system", systemPrompt);
-        JSONArray msgs = new JSONArray();
-        for (JSONObject m : conversationHistory) msgs.put(m);
-        body.put("messages", msgs);
+        body.put("temperature", 0.7);
 
         byte[] bytes = body.toString().getBytes(StandardCharsets.UTF_8);
         try (OutputStream os = conn.getOutputStream()) { os.write(bytes); }
@@ -235,10 +254,21 @@ public class AiChatActivity extends AppCompatActivity {
             while ((line = br.readLine()) != null) sb.append(line);
         }
 
-        if (code != 200) throw new Exception("HTTP " + code + ": " + sb);
+        if (code != 200) {
+            String errMsg = "HTTP " + code;
+            try {
+                JSONObject errJson = new JSONObject(sb.toString());
+                JSONObject error = errJson.optJSONObject("error");
+                if (error != null) errMsg = error.optString("message", errMsg);
+            } catch (Exception ignored) {}
+            throw new Exception(errMsg);
+        }
 
         JSONObject resp = new JSONObject(sb.toString());
-        return resp.getJSONArray("content").getJSONObject(0).getString("text");
+        return resp.getJSONArray("choices")
+                   .getJSONObject(0)
+                   .getJSONObject("message")
+                   .getString("content");
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -251,15 +281,18 @@ public class AiChatActivity extends AppCompatActivity {
         long monthStart = getMonthStart();
         String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date(now));
 
+        com.example.mpos.auth.SessionManager sess = new com.example.mpos.auth.SessionManager(this);
+        String shopName = sess.getShopName();
+        String shopId   = String.valueOf(sess.getShopId());
         StringBuilder ctx = new StringBuilder();
-        ctx.append("Bạn là Quầy AI - trợ lý AI thông minh của cửa hàng mPOS Pro tại Việt Nam.\n");
+        ctx.append("Bạn là Quầy AI - trợ lý AI thông minh của cửa hàng \"").append(shopName).append("\" tại Việt Nam.\n");
         ctx.append("Ngày hiện tại: ").append(date).append("\n\n");
         ctx.append("=== DỮ LIỆU KINH DOANH THỰC TẾ ===\n");
 
         // Today stats
         Cursor c = db.getReadableDatabase().rawQuery(
-            "SELECT COUNT(*), COALESCE(SUM(total_amount),0) FROM orders WHERE status!='CANCELLED' AND created_at>=?",
-            new String[]{String.valueOf(todayStart)});
+            "SELECT COUNT(*), COALESCE(SUM(total_amount),0) FROM orders WHERE shop_id=? AND status!='CANCELLED' AND created_at>=?",
+            new String[]{shopId, String.valueOf(todayStart)});
         if (c.moveToFirst()) {
             ctx.append("Hôm nay: ").append(c.getInt(0)).append(" đơn / ")
                .append(CurrencyUtils.vnd(c.getLong(1))).append("\n");
@@ -268,8 +301,8 @@ public class AiChatActivity extends AppCompatActivity {
 
         // Month stats
         Cursor cm = db.getReadableDatabase().rawQuery(
-            "SELECT COUNT(*), COALESCE(SUM(total_amount),0) FROM orders WHERE status='PAID' AND created_at>=?",
-            new String[]{String.valueOf(monthStart)});
+            "SELECT COUNT(*), COALESCE(SUM(total_amount),0) FROM orders WHERE shop_id=? AND status='PAID' AND created_at>=?",
+            new String[]{shopId, String.valueOf(monthStart)});
         if (cm.moveToFirst()) {
             long rev = cm.getLong(1);
             int cnt  = cm.getInt(0);
@@ -280,18 +313,21 @@ public class AiChatActivity extends AppCompatActivity {
 
         // All time
         Cursor ca = db.getReadableDatabase().rawQuery(
-            "SELECT COUNT(*), COALESCE(SUM(total_amount),0) FROM orders WHERE status='PAID'", null);
+            "SELECT COUNT(*), COALESCE(SUM(total_amount),0) FROM orders WHERE shop_id=? AND status='PAID'",
+            new String[]{shopId});
         if (ca.moveToFirst()) {
             ctx.append("Tổng tích lũy: ").append(ca.getInt(0)).append(" đơn / ")
                .append(CurrencyUtils.vnd(ca.getLong(1))).append("\n");
         }
         ca.close();
 
-        // Top products
+        // Top products (join orders để lọc đúng shop)
         ctx.append("\nTop sản phẩm bán chạy:\n");
         Cursor top = db.getReadableDatabase().rawQuery(
-            "SELECT product_name, SUM(quantity) q, SUM(line_total) rev " +
-            "FROM order_items GROUP BY product_id ORDER BY q DESC LIMIT 5", null);
+            "SELECT oi.product_name, SUM(oi.quantity) q, SUM(oi.line_total) rev " +
+            "FROM order_items oi JOIN orders o ON oi.order_id=o.id " +
+            "WHERE o.shop_id=? GROUP BY oi.product_id ORDER BY q DESC LIMIT 5",
+            new String[]{shopId});
         int rank = 1;
         while (top.moveToNext()) {
             ctx.append(rank).append(". ").append(top.getString(0))
@@ -305,7 +341,8 @@ public class AiChatActivity extends AppCompatActivity {
         ctx.append("\nSản phẩm sắp hết hàng:\n");
         Cursor low = db.getReadableDatabase().rawQuery(
             "SELECT name, stock_quantity, min_stock_quantity FROM products " +
-            "WHERE is_active=1 AND stock_quantity<=min_stock_quantity ORDER BY stock_quantity LIMIT 5", null);
+            "WHERE shop_id=? AND is_active=1 AND stock_quantity<=min_stock_quantity ORDER BY stock_quantity LIMIT 5",
+            new String[]{shopId});
         int lowCount = 0;
         while (low.moveToNext()) {
             ctx.append("• ").append(low.getString(0))
@@ -318,7 +355,8 @@ public class AiChatActivity extends AppCompatActivity {
 
         // Customers
         Cursor cust = db.getReadableDatabase().rawQuery(
-            "SELECT COUNT(*), COALESCE(SUM(loyalty_points),0) FROM customers", null);
+            "SELECT COUNT(*), COALESCE(SUM(loyalty_points),0) FROM customers WHERE shop_id=?",
+            new String[]{shopId});
         if (cust.moveToFirst()) {
             ctx.append("\nTổng khách hàng: ").append(cust.getInt(0))
                .append(" | Điểm thưởng tích lũy: ").append(cust.getLong(1)).append("\n");
@@ -327,7 +365,8 @@ public class AiChatActivity extends AppCompatActivity {
 
         // Inventory total
         Cursor inv = db.getReadableDatabase().rawQuery(
-            "SELECT COUNT(*), SUM(stock_quantity) FROM products WHERE is_active=1", null);
+            "SELECT COUNT(*), SUM(stock_quantity) FROM products WHERE shop_id=? AND is_active=1",
+            new String[]{shopId});
         if (inv.moveToFirst()) {
             ctx.append("Tổng sản phẩm: ").append(inv.getInt(0))
                .append(" | Tổng tồn kho: ").append(inv.getInt(1)).append(" đơn vị\n");
@@ -482,14 +521,14 @@ public class AiChatActivity extends AppCompatActivity {
 
     private void showApiKeyDialog() {
         EditText etKey = new EditText(this);
-        etKey.setHint("sk-ant-api03-...");
+        etKey.setHint("gsk_...");
         etKey.setText(getApiKey());
         int pad = dp(16);
         etKey.setPadding(pad, pad, pad, pad);
 
         new AlertDialog.Builder(this)
-            .setTitle("🔑 Claude API Key")
-            .setMessage("Nhập API Key từ console.anthropic.com\n(Khóa được lưu cục bộ trên thiết bị)")
+            .setTitle("🔑 Groq API Key")
+            .setMessage("Lấy key miễn phí (không cần thẻ) tại:\nconsole.groq.com → API Keys → Create API key\n(Key bắt đầu bằng gsk_...)")
             .setView(etKey)
             .setPositiveButton("Lưu", (d, w) -> {
                 String key = etKey.getText().toString().trim();
@@ -497,7 +536,7 @@ public class AiChatActivity extends AppCompatActivity {
                 if (!key.isEmpty()) {
                     conversationHistory.clear();
                     systemPrompt = buildSystemPrompt();
-                    addBotMessage("✅ API Key đã được lưu! Tôi là **Quầy AI** - sẵn sàng hỗ trợ bạn 🚀");
+                    addBotMessage("✅ Gemini API Key đã được lưu! Tôi là **Quầy AI** - sẵn sàng hỗ trợ bạn 🚀");
                 }
             })
             .setNegativeButton("Hủy", null)
@@ -505,8 +544,9 @@ public class AiChatActivity extends AppCompatActivity {
     }
 
     private String getApiKey() {
-        return getSharedPreferences(PREFS_AI, Context.MODE_PRIVATE)
-               .getString(KEY_API_KEY, "");
+        String saved = getSharedPreferences(PREFS_AI, Context.MODE_PRIVATE)
+                       .getString(KEY_API_KEY, "");
+        return saved.isEmpty() ? DEFAULT_KEY : saved;
     }
 
     private void saveApiKey(String key) {

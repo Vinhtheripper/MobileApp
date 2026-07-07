@@ -19,11 +19,20 @@ public class CustomerDao {
     }
 
     public List<Customer> search(String term) {
-        String p = "%" + term.trim() + "%";
-        Cursor c = helper.getReadableDatabase().rawQuery(
-            "SELECT id,full_name,phone,email,address,loyalty_points FROM customers " +
-            "WHERE shop_id=? AND (full_name LIKE ? OR phone LIKE ?) ORDER BY updated_at DESC LIMIT 100",
-            new String[]{String.valueOf(shopId), p, p});
+        Cursor c;
+        if (term == null || term.trim().isEmpty()) {
+            c = helper.getReadableDatabase().rawQuery(
+                "SELECT id,full_name,phone,email,address,loyalty_points FROM customers " +
+                "WHERE shop_id=? ORDER BY COALESCE(updated_at, created_at) DESC LIMIT 200",
+                new String[]{String.valueOf(shopId)});
+        } else {
+            String p = "%" + term.trim() + "%";
+            c = helper.getReadableDatabase().rawQuery(
+                "SELECT id,full_name,phone,email,address,loyalty_points FROM customers " +
+                "WHERE shop_id=? AND (COALESCE(full_name,'') LIKE ? OR COALESCE(phone,'') LIKE ?) " +
+                "ORDER BY COALESCE(updated_at, created_at) DESC LIMIT 100",
+                new String[]{String.valueOf(shopId), p, p});
+        }
         List<Customer> result = new ArrayList<>();
         try { while (c.moveToNext()) result.add(map(c)); } finally { c.close(); }
         return result;
@@ -60,14 +69,20 @@ public class CustomerDao {
         return customer.id;
     }
 
+    public void delete(long id) {
+        helper.getWritableDatabase().delete("customers", "id=?", new String[]{String.valueOf(id)});
+    }
+
     public long findOrCreate(String phone) {
         if (phone == null || phone.trim().isEmpty()) return -1;
         Customer existing = findByPhone(phone);
         if (existing != null) return existing.id;
+        long now = System.currentTimeMillis();
         ContentValues v = new ContentValues();
         v.put("phone", phone.trim());
         v.put("shop_id", shopId);
-        v.put("created_at", System.currentTimeMillis());
+        v.put("created_at", now);
+        v.put("updated_at", now);
         return helper.getWritableDatabase().insertOrThrow("customers", null, v);
     }
 
