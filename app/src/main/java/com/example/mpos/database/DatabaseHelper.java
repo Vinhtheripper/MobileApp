@@ -41,6 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE INDEX idx_order_items_order_id ON order_items(order_id)");
         db.execSQL("CREATE INDEX idx_sync_queue_status ON sync_queue(status)");
         DatabaseSeeder.seed(db);
+        DatabaseSeeder.seedShopLangNghe(db);
     }
 
     @Override
@@ -90,6 +91,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE shipping_orders ADD COLUMN recipient_address TEXT");
             db.execSQL("ALTER TABLE shipping_orders ADD COLUMN recipient_district TEXT");
             db.execSQL("ALTER TABLE shipping_orders ADD COLUMN cod_amount INTEGER NOT NULL DEFAULT 0");
+        }
+        if (oldVersion < 15) {
+            DatabaseSeeder.seedShopLangNghe(db);
         }
     }
 }

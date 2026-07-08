@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "806473242255",
+    "firebase_url": "https://mobile-app-19c4a-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "mobile-app-19c4a",
+    "storage_bucket": "mobile-app-19c4a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:806473242255:android:53622dddf1dc90942002fa",
+        "android_client_info": {
+          "package_name": "com.example.mpos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6oOdMSNWParDUkLeSaSpNgE42Ql3q_98"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

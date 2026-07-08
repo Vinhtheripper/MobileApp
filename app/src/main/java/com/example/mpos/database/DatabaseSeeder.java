@@ -450,4 +450,99 @@ public final class DatabaseSeeder {
         v.put("amount", amount); v.put("status", "PAID"); v.put("paid_at", paidAt);
         try { db.insertOrThrow(DatabaseContract.PAYMENTS, null, v); } catch (Exception ignored) { }
     }
+
+    /** Tạo shop "Chuyen Lang Nghe" + 60 sản phẩm thủ công mỹ nghệ. Idempotent. */
+    public static void seedShopLangNghe(SQLiteDatabase db) {
+        Cursor cs = db.rawQuery("SELECT COUNT(*) FROM shops WHERE name='Chuyen Lang Nghe'", null);
+        try { if (cs.moveToFirst() && cs.getInt(0) > 0) return; } finally { cs.close(); }
+
+        long now = System.currentTimeMillis();
+
+        // Tạo user chủ shop nếu chưa có
+        long ownerId = -1;
+        Cursor cu = db.rawQuery("SELECT id FROM users WHERE username='duongtanminh2306@gmail.com'", null);
+        try { if (cu.moveToFirst()) ownerId = cu.getLong(0); } finally { cu.close(); }
+        if (ownerId < 0) {
+            long emp = insertEmployee(db, "EMP-LN01", "Duong Tan Minh", "duongtanminh2306@gmail.com", "Owner");
+            ContentValues uv = new ContentValues();
+            uv.put("username", "duongtanminh2306@gmail.com");
+            uv.put("password_hash", "7d2bb7202f7c343024416b95a98ebe9050562b82974132c66109c61a09a2e063");
+            uv.put("employee_id", emp);
+            uv.put("role", "ADMIN");
+            uv.put("created_at", now);
+            try { ownerId = db.insertOrThrow(DatabaseContract.USERS, null, uv); } catch (Exception ignored) { }
+            cu = db.rawQuery("SELECT id FROM users WHERE username='duongtanminh2306@gmail.com'", null);
+            try { if (cu.moveToFirst()) ownerId = cu.getLong(0); } finally { cu.close(); }
+        }
+        if (ownerId < 0) return;
+
+        long shopId = insertShop(db, "Chuyen Lang Nghe", "", "", ownerId, now);
+        insertShopMember(db, shopId, ownerId, "OWNER");
+
+        long catGom   = insertCategory(db, "Gom su",        shopId);
+        long catMay   = insertCategory(db, "May tre dan",   shopId);
+        long catLich  = insertCategory(db, "Lich go",       shopId);
+        long catTranh = insertCategory(db, "Tranh & Tuong", shopId);
+
+        insertProduct(db, "4312153686462", null, "(Bán Lẻ) Ấm trà gốm men hỏa biến – Thanh Hà", catGom, 90000, 150000, 34, 3, "https://cdn.hstatic.net/products/200001185819/amtrathanhha_b740fca9d17945209769834d36e7b8b5.png", now, shopId);
+        insertProduct(db, "2720802123461", null, "(Bán Lẻ) Bộ Trà Gốm \"Hải Vân Chân Phương\" – Men Hỏa Biến Thanh Hà", catGom, 675000, 1125000, 79, 6, "https://cdn.hstatic.net/products/200001185819/haivanchanphuong_4ef1e42661894f70aa2efad8701dbfdd.png", now, shopId);
+        insertProduct(db, "4360840033724", null, "(CAO) Bình gốm trang trí dáng trụ \"Vân Sóng\" – Bàu Trúc", catGom, 468000, 780000, 67, 5, "https://cdn.hstatic.net/products/200001185819/binhgomtrangtri_e377271385ea4c86b0430fb501f9843c.png", now, shopId);
+        insertProduct(db, "9380428449410", null, "(MEN HỔ PHÁCH) Bình Gốm Decor \"Quả Bí\" – Gốm Biên Hòa", catGom, 210000, 350000, 36, 4, "https://cdn.hstatic.net/products/200001185819/menhophch_feab873ea93d4ce89adcf51675a622f3.png", now, shopId);
+        insertProduct(db, "3362113505531", null, "(MEN NGỌC LỤC BẢO) Bình Gốm Decor \"Quả Bí\" – Gốm Biên Hòa", catGom, 210000, 350000, 118, 3, "https://cdn.hstatic.net/products/200001185819/1_369cf4577f8f4fc6b9b0a95edd574a6e.png", now, shopId);
+        insertProduct(db, "2574211521799", null, "(MEN NGỌC LỤC BẢO) Bình Gốm Quả Bí Họa Tiết Mây Cổ - Làng Gốm Biên Hòa", catGom, 299400, 499000, 17, 4, "https://cdn.hstatic.net/products/200001185819/binhgomquabi_83c47961d34e4766a047c49f068c17f1.png", now, shopId);
+        insertProduct(db, "283802884775", null, "(MEN THANH LƯU) Bình Gốm Quả Bí Họa Tiết Mây Cổ - Làng Gốm Biên Hòa", catGom, 299400, 499000, 65, 6, "https://cdn.hstatic.net/products/200001185819/mayco_b167f23017ca4ddaa7143706559991cf.png", now, shopId);
+        insertProduct(db, "1074235442294", null, "(MEN XANH TRÀM) Bình Gốm Decor \"Quả Bí\" – Gốm Biên Hòa", catGom, 210000, 350000, 139, 3, "https://cdn.hstatic.net/products/200001185819/decorquabi_971dae949c9f44bba2383f80087cff25.png", now, shopId);
+        insertProduct(db, "3000575365780", null, "(TRUNG) Bình gốm trang trí dáng trụ \"Vân Sóng\" – Bàu Trúc", catGom, 330000, 550000, 60, 9, "https://cdn.hstatic.net/products/200001185819/trung_7d603df6cf9f4a148f11423253acb05b.png", now, shopId);
+        insertProduct(db, "8358526471417", null, "Bàn Chải Đánh Răng Tre", catMay, 27000, 45000, 66, 10, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_161849_b6dee74aa1fd468ca9c8f1dc3044839c.png", now, shopId);
+        insertProduct(db, "2054541520299", null, "Bát Cơm Gốm Biên Hòa Men Màu Độc Đáo", catGom, 108000, 180000, 81, 3, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_164354_e5039ffe21554ef1b99a528c30388e1f.png", now, shopId);
+        insertProduct(db, "1130382079633", null, "Bình gốm trang trí \"Mộc Lan Chi\" – Lái Thiêu", catGom, 600000, 1000000, 50, 9, "https://cdn.hstatic.net/products/200001185819/laithieu_9460302c2af84eee8a75d32bcceec8d0.png", now, shopId);
+        insertProduct(db, "9194032116241", null, "Bình gốm trang trí họa tiết Thiên Dương – Phù Lãng", catGom, 675000, 1125000, 97, 7, "https://cdn.hstatic.net/products/200001185819/thienduong1_8e907734524d4396aaf7c3a1b3e40021.png", now, shopId);
+        insertProduct(db, "4380420390126", null, "Bình gốm tứ cảnh \"Điểu Hoa Đoàn Viên\" – Gốm Chu Đậu", catGom, 1110000, 1850000, 49, 6, "https://cdn.hstatic.net/products/200001185819/doanvien1_eaf2896414624437b0bfe377944ba3cb.png", now, shopId);
+        insertProduct(db, "5341271244023", null, "Bình gốm tỳ bà \"Mã Đáo Thành Công\" – Chu Đậu Kim Lan", catGom, 1590000, 2650000, 96, 4, "https://cdn.hstatic.net/products/200001185819/madaothanhcong1_481847339d414a42871cd0beb999e73f.png", now, shopId);
+        insertProduct(db, "5432144343684", null, "Bình Rượu Gốm Sứ Cổ Điển", catGom, 312000, 520000, 33, 9, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_164549_89f43b8019d049a7a4bc12c0a55cae42.png", now, shopId);
+        insertProduct(db, "5289204045554", null, "Bộ ấm trà gốm men hỏa biến – Thanh Hà", catGom, 534000, 890000, 34, 8, "https://cdn.hstatic.net/products/200001185819/menhoa1_b5fe14decbfe48eeb1baf94e4cc6b71b.png", now, shopId);
+        insertProduct(db, "5405155345110", null, "Bộ Ấm Trà Gốm Thanh Hà 5 Món", catGom, 1008000, 1680000, 98, 7, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_164718_7d97131615f84e17bd0d6f517adf9534.png", now, shopId);
+        insertProduct(db, "0300303272470", null, "Bộ Đồ Trang Trí Gốm Sứ Buncheong", catGom, 907200, 1512000, 21, 10, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_165359_674cbca3a88b432e92e583478e0df6ac.png", now, shopId);
+        insertProduct(db, "3583003352830", null, "Bộ Đũa Gỗ Tay Trong Giỏ Tre", catMay, 252000, 420000, 147, 4, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_165148_2db6e2dc58594cd691c5a812b88db514.png", now, shopId);
+        insertProduct(db, "5448243291184", null, "Bộ Trà Gốm \"Hải Vân Chân Phương\" – Men Hỏa Biến Thanh Hà", catGom, 675000, 1125000, 106, 4, "https://cdn.hstatic.net/products/200001185819/menhoatra_4767243e1d2b42c7ba64ba066d3c21d5.png", now, shopId);
+        insertProduct(db, "602141711249", null, "BST Bình Gốm Decor \"Quả Bí\" – Gốm Biên Hòa", catGom, 570000, 950000, 85, 8, "https://cdn.hstatic.net/products/200001185819/quabibienhoa_a601f4fd4bf0457ca07bc7f21786d255.png", now, shopId);
+        insertProduct(db, "5789302533106", null, "BST Bình Và Dĩa Gốm Trang Trí \"Điệp Vũ Hoa Đình\"", catGom, 1335000, 2225000, 59, 4, "https://cdn.hstatic.net/products/200001185819/diepvuhoadinh_0bbba79f6c7244faa7d0ec281250dedd.png", now, shopId);
+        insertProduct(db, "4176053653246", null, "BST Chén Dĩa \"Huyền Liên\" – Phù Lãng", catGom, 690000, 1150000, 21, 6, "https://cdn.hstatic.net/products/200001185819/huyenlien_3642216f3d0a4853a301abb1d2184acd.png", now, shopId);
+        insertProduct(db, "847505703533", null, "BST Ngọc Lam Phú Quý – Bình gốm men ngọc họa tiết chim xuân", catGom, 894000, 1490000, 84, 4, "https://cdn.hstatic.net/products/200001185819/ngoclamphuquy_78c0a093e11244cd8759553d695cab8c.png", now, shopId);
+        insertProduct(db, "181537988102", null, "Chén Ăn Gốm Men Xanh Bát Tràng", catGom, 72000, 120000, 69, 4, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_165008_8a6dd17b630444f1aab4f2e572e82d74.png", now, shopId);
+        insertProduct(db, "8525512763064", null, "Chén cơm Gốm \"Hà Liên\" – Tuyệt phẩm Men Hỏa Biến Thanh Hà", catGom, 75000, 125000, 107, 7, "https://cdn.hstatic.net/products/200001185819/halien1_7867d1f5a8b04fae8ddb2eb016f9764c.png", now, shopId);
+        insertProduct(db, "5222594141431", null, "Cốc Uống Nước Gốm Bát Tràng", catGom, 57000, 95000, 126, 8, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_165548_153ba0e970424e228a658eeb6d868cde.png", now, shopId);
+        insertProduct(db, "3515934207085", null, "Đĩa Trang Trí Gốm Biên Hòa Men Hổ Phách", catGom, 270000, 450000, 51, 8, "https://cdn.hstatic.net/products/200001185819/anh_chup_man_hinh_2026-06-16_161405_3fd1dd300abf4abc9de139ee8044f208.png", now, shopId);
+        insertProduct(db, "4540818467400", null, "Giỏ Đan Đa Năng \"Chương Mỹ\" – Kèm lót vải hoa.", catMay, 99000, 165000, 100, 6, "https://cdn.hstatic.net/products/200001185819/chuongmy1_907c63e65c814246852adcb7a7235eb7.png", now, shopId);
+        insertProduct(db, "3544095905270", null, "Giỏ Mây Bập Bênh – Eclipse Basket", catMay, 120000, 200000, 78, 4, "https://cdn.hstatic.net/products/200001185819/bapbenh_5885ddbc4d064534a7d3152d53ac882f.png", now, shopId);
+        insertProduct(db, "3845431554350", null, "Giỏ Mây Đan Picnic – Rural Charm (Kèm lót vải)", catMay, 147000, 245000, 53, 6, "https://cdn.hstatic.net/products/200001185819/maydan1_22072c07a3cc4b2ea7a7421614329e12.png", now, shopId);
+        insertProduct(db, "3591350224226", null, "Giỏ Mây Hai Tầng Trang Trí \"Tam Đảo\".", catMay, 143400, 239000, 51, 10, "https://cdn.hstatic.net/products/200001185819/maytang1_339e9fb0244f4ef7bfeee25f086cc54e.png", now, shopId);
+        insertProduct(db, "434715860891", null, "Giỏ Tre Đan Thủ Công Làng Triêu Khúc", catMay, 168000, 280000, 107, 7, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_160834_8515d4b528254744be8e89a3217a0603.png", now, shopId);
+        insertProduct(db, "7133235810902", null, "Giỏ Tre Đan Tròn Có Nắp", catMay, 210000, 350000, 66, 8, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_160424_ae08b8875a2b40fe8bfc475e4f940582.png", now, shopId);
+        insertProduct(db, "4465403356592", null, "Hộp Trà Gỗ Có Ngăn Chia", catLich, 348000, 580000, 24, 6, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_160041_87ad83518c98482fa81fba38b7aa9239.png", now, shopId);
+        insertProduct(db, "3636420046151", null, "Khay Mây Chữ Nhật – Minimalist Organizer", catMay, 119400, 199000, 18, 8, "https://cdn.hstatic.net/products/200001185819/khaymay1_d04ae3f0700e4962b23f9041a4a11042.png", now, shopId);
+        insertProduct(db, "4401270345144", null, "Lịch Để Bàn \"Kỷ Nguyên\" – Đế gỗ thủ công", catLich, 129000, 215000, 112, 7, "https://cdn.hstatic.net/products/200001185819/kynguyen1_4d809ba97f5c4b779d2da4b1e693c45d.png", now, shopId);
+        insertProduct(db, "850618113101", null, "Lịch Gỗ Lật Decor Mini 2026", catLich, 99000, 165000, 26, 6, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_155516_98e2a4b6c73649ab8b715ba37fe174f7.png", now, shopId);
+        insertProduct(db, "143646213806", null, "Lịch Gỗ \"Mái Nhà Bình Yên\" – Dáng nhà gỗ thủ công", catLich, 150000, 250000, 90, 6, "https://cdn.hstatic.net/products/200001185819/mainha1_f15678714586416fa8be6d20929196c6.png", now, shopId);
+        insertProduct(db, "633092692335", null, "Lịch Gỗ Đa Năng \"Ký Ức\" – Tích hợp khay bút & khung ảnh", catMay, 147000, 245000, 137, 9, "https://cdn.hstatic.net/products/200001185819/kyuc1_008e0a33666b4a06bdc47807b251fb3f.png", now, shopId);
+        insertProduct(db, "2592633984434", null, "Lịch Gỗ Để Bàn Đa Năng \"Mộc Chuẩn\" – Tích hợp khay bút", catMay, 171000, 285000, 127, 5, "https://cdn.hstatic.net/products/200001185819/mocchuan1_49925c675bf440899310b0a503ee3026.png", now, shopId);
+        insertProduct(db, "4009347136524", null, "Lịch Gỗ Trang Trí 2026 Phong Cách Truyền Thống", catLich, 192000, 320000, 77, 5, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_154727_5f6767f4d9e042fe8119b1f675c0c218.png", now, shopId);
+        insertProduct(db, "3645980634545", null, "Lốc Lịch Gỗ Treo Tường Tượng Di Lặc 2026", catLich, 168000, 280000, 73, 7, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_154158_2eee4c9bcbc548798ed8df496c1ab19f.png", now, shopId);
+        insertProduct(db, "2544824597359", null, "Lọ Cắm Hoa Gốm Phù Lãng Họa Tiết Phượng", catGom, 408000, 680000, 119, 9, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_153742_53ea0447960f4a0bb1f83bf961a6087b.png", now, shopId);
+        insertProduct(db, "4547195951037", null, "Ngọc Lam Phú Quý – Bình gốm men ngọc họa tiết chim xuân", catGom, 354000, 590000, 102, 6, "https://cdn.hstatic.net/products/200001185819/1_51ab25cd71934293b66e1989357a253f.png", now, shopId);
+        insertProduct(db, "3601145013371", null, "Ngọc Lam Phú Quý – Dĩa gốm men ngọc họa tiết chim xuân", catGom, 228000, 380000, 45, 10, "https://cdn.hstatic.net/products/200001185819/2_f91368866e8f43ef800780d1755e2689.png", now, shopId);
+        insertProduct(db, "3040808342281", null, "Ngọc Lam Phú Quý – Lọ gốm men ngọc họa tiết chim xuân", catGom, 372000, 620000, 33, 3, "https://cdn.hstatic.net/products/200001185819/3_14689debc023444c922ebfc73e645edf.png", now, shopId);
+        insertProduct(db, "5100032540701", null, "Sọt Cói Decor \"Nét Mộc\" – Có Quai Dây Thừng", catMay, 111000, 185000, 38, 5, "https://cdn.hstatic.net/products/200001185819/46_543a632696574ca3b4bbbf8ded69b42c.png", now, shopId);
+        insertProduct(db, "5091306245401", null, "Tranh Gốm Phù Điêu Cảnh Làng Quê", catTranh, 660000, 1100000, 50, 9, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_152627_8a3373e9cc874549a9fac32729964518.png", now, shopId);
+        insertProduct(db, "8616472276854", null, "Tranh Sơn Mài Tranh Phong Cảnh Việt Nam", catTranh, 720000, 1200000, 26, 9, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_152416_6938514fabc1431b9459abbdca64c289.png", now, shopId);
+        insertProduct(db, "9090853144831", null, "Tranh Thêu Tay Phong Cảnh Hạ Long", catTranh, 870000, 1450000, 107, 10, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_152126_be686f5f2db64016b693d47d60fb0aa1.png", now, shopId);
+        insertProduct(db, "502121022693", null, "Túi Xách Đan Thủ Công \"Sa Huỳnh\"", catMay, 177000, 295000, 145, 7, "https://cdn.hstatic.net/products/200001185819/63_5d6d3b8ab7be41019e0d27ec333613c0.png", now, shopId);
+        insertProduct(db, "981734221129", null, "Tượng Bạch Mã \"Vinh Hiển\" – Điểm xuyết kim quý", catTranh, 1350000, 2250000, 12, 4, "https://cdn.hstatic.net/products/200001185819/81_2a88d8ad1022463e99b46b85163358a4.png", now, shopId);
+        insertProduct(db, "3202093909188", null, "Tượng Linh Xà Ấn Vương \"Thanh Xuân\" – Khắc họa linh vật năm Tỵ", catTranh, 1350000, 2250000, 147, 7, "https://cdn.hstatic.net/products/200001185819/86_92b42b8b57a84e62a83b7c7c7212bf1f.png", now, shopId);
+        insertProduct(db, "4724134945854", null, "Tượng Mèo Maneki-neko Gốm May Mắn", catTranh, 228000, 380000, 96, 4, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_150036_e734ac73be054cebbfeceacc32f7ad23.png", now, shopId);
+        insertProduct(db, "5941537370354", null, "Tượng Phật Quan Âm Gốm Sứ Bát Tràng", catTranh, 510000, 850000, 84, 9, "https://cdn.hstatic.net/products/200001185819/_nh_ch_p_m_n_h_nh_2026-06-16_144624_194d41e0ca00431c9abec13a955bd5b8.png", now, shopId);
+        insertProduct(db, "3125265836737", null, "Tượng Rồng \"Hoàng Long Tài Lộc\"", catTranh, 1800000, 3000000, 50, 10, "https://cdn.hstatic.net/products/200001185819/94_fe4e766f1e1a4add9e89a8fbcfb41d91.png", now, shopId);
+        insertProduct(db, "1021792454515", null, "Tượng Rồng \"Khải Đức\"", catTranh, 1950000, 3250000, 10, 7, "https://cdn.hstatic.net/products/200001185819/85_0ddd9b88f262469cb557dcf7aa9c0806.png", now, shopId);
+        insertProduct(db, "6006313579536", null, "Tượng Rồng Gốm Sứ Phong Thủy", catTranh, 552000, 920000, 138, 5, "https://cdn.hstatic.net/products/200001185819/88_621920cc558548f1b577d7423b9a13bd.png", now, shopId);
+    }
 }

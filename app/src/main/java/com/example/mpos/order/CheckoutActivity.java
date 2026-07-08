@@ -46,7 +46,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private LinearLayout cardCash, cardVietQR, cardBank, cardWallet;
     private TextView txtCashRadio, txtVietQRRadio, txtBankRadio, txtWalletRadio;
-    private LinearLayout layoutCashInput, layoutQR, layoutWalletOptions;
+    private LinearLayout layoutCashInput, layoutQR, layoutMomoQR, layoutWalletOptions;
     private LinearLayout btnWalletMomo, btnWalletZalo, btnWalletViettel;
     private EditText inputReceived;
     private TextView txtChange, txtQRAmount, txtQRBankInfo;
@@ -85,6 +85,7 @@ public class CheckoutActivity extends AppCompatActivity {
         txtWalletRadio = findViewById(R.id.txtWalletRadio);
         layoutCashInput     = findViewById(R.id.layoutCashInput);
         layoutQR            = findViewById(R.id.layoutQR);
+        layoutMomoQR        = findViewById(R.id.layoutMomoQR);
         layoutWalletOptions = findViewById(R.id.layoutWalletOptions);
         btnWalletMomo    = findViewById(R.id.btnWalletMomo);
         btnWalletZalo    = findViewById(R.id.btnWalletZalo);
@@ -169,9 +170,20 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private void setupWalletButtons() {
         setWalletSelected(btnWalletMomo, "MOMO");
-        btnWalletMomo.setOnClickListener(v -> { selectedWallet = "MOMO";    updateWalletSelection(); });
-        btnWalletZalo.setOnClickListener(v -> { selectedWallet = "ZALOPAY"; updateWalletSelection(); });
-        btnWalletViettel.setOnClickListener(v -> { selectedWallet = "VIETTELMONEY"; updateWalletSelection(); });
+        btnWalletMomo.setOnClickListener(v -> { selectedWallet = "MOMO";    updateWalletSelection(); showMomoQRIfAvailable(); });
+        btnWalletZalo.setOnClickListener(v -> { selectedWallet = "ZALOPAY"; updateWalletSelection(); if (layoutMomoQR != null) layoutMomoQR.setVisibility(View.GONE); });
+        btnWalletViettel.setOnClickListener(v -> { selectedWallet = "VIETTELMONEY"; updateWalletSelection(); if (layoutMomoQR != null) layoutMomoQR.setVisibility(View.GONE); });
+    }
+
+    private void showMomoQRIfAvailable() {
+        if (layoutMomoQR == null) return;
+        String momoUri = settingsDao.get("momo_qr_uri", "");
+        if (momoUri.isEmpty()) { layoutMomoQR.setVisibility(View.GONE); return; }
+        android.widget.ImageView imgQR = layoutMomoQR.findViewById(R.id.imgMomoQR);
+        android.widget.TextView txtAmt = layoutMomoQR.findViewById(R.id.txtMomoQRAmount);
+        if (imgQR != null) imgQR.setImageURI(android.net.Uri.parse(momoUri));
+        if (txtAmt != null) txtAmt.setText(com.example.mpos.utils.CurrencyUtils.vnd(effectiveTotal()));
+        layoutMomoQR.setVisibility(View.VISIBLE);
     }
 
     private void setupCashPresets() {
@@ -213,8 +225,12 @@ public class CheckoutActivity extends AppCompatActivity {
         btn.setBackground(sel
             ? makeRoundedBg(0xFF2875FB, 10)
             : makeRoundedBg(0xFFF1F5F9, 10));
-        TextView tv = (TextView) btn.getChildAt(0);
-        if (tv != null) tv.setTextColor(sel ? 0xFFFFFFFF : 0xFF1C2333);
+        for (int i = 0; i < btn.getChildCount(); i++) {
+            if (btn.getChildAt(i) instanceof TextView) {
+                ((TextView) btn.getChildAt(i)).setTextColor(sel ? 0xFFFFFFFF : 0xFF1C2333);
+                break;
+            }
+        }
     }
 
     private android.graphics.drawable.GradientDrawable makeRoundedBg(int color, int r) {
@@ -295,6 +311,7 @@ public class CheckoutActivity extends AppCompatActivity {
         setCardSelected(cardWallet, txtWalletRadio, false);
         layoutCashInput.setVisibility(View.GONE);
         layoutQR.setVisibility(View.GONE);
+        if (layoutMomoQR != null) layoutMomoQR.setVisibility(View.GONE);
         layoutWalletOptions.setVisibility(View.GONE);
 
         switch (method) {

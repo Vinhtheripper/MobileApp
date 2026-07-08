@@ -62,7 +62,10 @@ public class ProductDao {
 
     public long save(Product product) {
         ContentValues v = new ContentValues();
-        v.put("barcode", product.barcode); v.put("sku", product.sku); v.put("name", product.name);
+        // NULL không vi phạm UNIQUE, empty string thì bị — chuyển empty → null
+        String sku     = (product.sku     != null && !product.sku.isEmpty())     ? product.sku     : null;
+        String barcode = (product.barcode != null && !product.barcode.isEmpty()) ? product.barcode : null;
+        v.put("barcode", barcode); v.put("sku", sku); v.put("name", product.name);
         v.put("sale_price", product.salePrice); v.put("stock_quantity", product.stockQuantity);
         v.put("min_stock_quantity", product.minStockQuantity);
         if (product.categoryId > 0) v.put("category_id", product.categoryId);

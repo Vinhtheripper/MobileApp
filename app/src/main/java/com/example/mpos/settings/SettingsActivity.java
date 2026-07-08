@@ -1,11 +1,15 @@
 package com.example.mpos.settings;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +23,8 @@ import com.example.mpos.model.User;
 public class SettingsActivity extends AppCompatActivity {
 
     private SettingsDao dao;
+    private ImageView imgMomoQRPreview;
+    private ActivityResultLauncher<String> momoQRPicker;
 
     private void updateAiKeyStatus(android.widget.TextView tv, android.content.SharedPreferences p) {
         if (tv == null) return;
@@ -97,6 +103,16 @@ public class SettingsActivity extends AppCompatActivity {
     public void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.activity_settings);
+
+        momoQRPicker = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+            if (uri == null) return;
+            try {
+                getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            } catch (Exception ignored) {}
+            dao.put("momo_qr_uri", uri.toString());
+            if (imgMomoQRPreview != null) imgMomoQRPreview.setImageURI(uri);
+            Toast.makeText(this, "Đã lưu mã QR MoMo", Toast.LENGTH_SHORT).show();
+        });
 
         dao = new SettingsDao(new DatabaseHelper(this));
 
@@ -204,10 +220,24 @@ public class SettingsActivity extends AppCompatActivity {
         updateAiKeyStatus(txtAiKeyStatus, aiPrefs);
         findViewById(R.id.btnSetAiKey).setOnClickListener(v -> showAiKeyDialog(aiPrefs, txtAiKeyStatus));
 
+        String currentRole = user != null ? user.role : "STAFF";
+
+        // MoMo QR (Admin + Manager)
+        imgMomoQRPreview = findViewById(R.id.imgMomoQRPreview);
+        android.view.View sectionMomo = findViewById(R.id.sectionMomoQR);
+        if (sectionMomo != null && ("ADMIN".equals(currentRole) || "MANAGER".equals(currentRole))) {
+            sectionMomo.setVisibility(android.view.View.VISIBLE);
+            String momoUri = dao.get("momo_qr_uri", "");
+            if (!momoUri.isEmpty() && imgMomoQRPreview != null) {
+                imgMomoQRPreview.setImageURI(Uri.parse(momoUri));
+            }
+            android.view.View btnUpload = findViewById(R.id.btnUploadMomoQR);
+            if (btnUpload != null) btnUpload.setOnClickListener(v -> momoQRPicker.launch("image/*"));
+        }
+
         // PIN management (Admin only)
         android.content.SharedPreferences pinPrefs = getSharedPreferences("mpos_pin_prefs", android.content.Context.MODE_PRIVATE);
         android.view.View sectionPin = findViewById(R.id.sectionPinManagement);
-        String currentRole = user != null ? user.role : "STAFF";
         if (sectionPin != null && "ADMIN".equals(currentRole)) {
             sectionPin.setVisibility(android.view.View.VISIBLE);
             updatePinStatus(pinPrefs);

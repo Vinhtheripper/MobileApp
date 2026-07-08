@@ -74,6 +74,7 @@ public class ShopListActivity extends AppCompatActivity {
 
     private void enterShop(Shop shop) {
         if (shop == null) return;
+        com.example.mpos.cart.CartManager.get().clear();
         session.saveShop(shop.id, shop.name, shop.memberRole != null ? shop.memberRole : "STAFF");
         com.example.mpos.auth.FirebaseAuthHelper.onShopSelected(shop.id);
 

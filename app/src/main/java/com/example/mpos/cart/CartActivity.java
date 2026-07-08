@@ -44,7 +44,7 @@ public class CartActivity extends AppCompatActivity {
         findViewById(R.id.btnClearCart).setOnClickListener(v ->
             new AlertDialog.Builder(this).setTitle("Xóa giỏ hàng")
                 .setMessage("Bạn có chắc muốn xóa toàn bộ giỏ hàng?")
-                .setPositiveButton("Xóa", (d, w) -> { CartManager.get().clear(); render(); })
+                .setPositiveButton("Xóa", (d, w) -> { CartManager.get().clear(); finish(); })
                 .setNegativeButton("Hủy", null).show());
         findViewById(R.id.btnCartCheckout).setOnClickListener(v -> {
             if (CartManager.get().isEmpty()) { Toast.makeText(this, "Giỏ hàng đang trống", Toast.LENGTH_SHORT).show(); return; }
@@ -53,7 +53,11 @@ public class CartActivity extends AppCompatActivity {
         render();
     }
 
-    @Override protected void onResume() { super.onResume(); render(); }
+    @Override protected void onResume() {
+        super.onResume();
+        if (CartManager.get().isEmpty()) { finish(); return; }
+        render();
+    }
 
     private void render() {
         List<CartItem> items = CartManager.get().getItems();

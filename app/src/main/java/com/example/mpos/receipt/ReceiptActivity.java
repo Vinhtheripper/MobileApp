@@ -54,10 +54,7 @@ public class ReceiptActivity extends AppCompatActivity {
         if (fromHistory) {
             btnNewSale.setVisibility(View.GONE);
         } else {
-            btnNewSale.setOnClickListener(v -> {
-                startActivity(new Intent(this, PosActivity.class));
-                finish();
-            });
+            btnNewSale.setOnClickListener(v -> goToPos());
         }
         findViewById(R.id.btnPrint).setOnClickListener(v -> printReceipt());
         findViewById(R.id.btnShare).setOnClickListener(v -> shareReceipt());
@@ -74,11 +71,15 @@ public class ReceiptActivity extends AppCompatActivity {
         if (getIntent().getBooleanExtra("from_history", false)) {
             finish();
         } else {
-            Intent i = new Intent(this, OrderListActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
-            finish();
+            goToPos();
         }
+    }
+
+    private void goToPos() {
+        Intent i = new Intent(this, PosActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(i);
+        finish();
     }
 
     // ─── Load receipt ─────────────────────────────────────────────────────────

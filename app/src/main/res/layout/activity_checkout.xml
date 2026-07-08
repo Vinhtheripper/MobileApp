@@ -317,8 +317,12 @@
                         android:orientation="vertical"
                         android:clickable="true"
                         android:focusable="true">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="🔵" android:textSize="24sp"/>
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_momo"
+                            android:scaleType="fitCenter"
+                            android:contentDescription="MoMo"/>
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="MoMo" android:textColor="#1C2333" android:textSize="12sp" android:textStyle="bold"/>
@@ -527,6 +531,45 @@
                         android:textStyle="bold"/>
                 </LinearLayout>
 
+                <!-- MoMo QR display area -->
+                <LinearLayout
+                    android:id="@+id/layoutMomoQR"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_card_white_12"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/imgMomoQR"
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:scaleType="fitCenter"
+                        android:contentDescription="MoMo QR"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="Quét mã QR để thanh toán qua MoMo"
+                        android:textColor="#64748B"
+                        android:textSize="13sp"/>
+
+                    <TextView
+                        android:id="@+id/txtMomoQRAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="#AE2070"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
                 <!-- Wallet sub-options -->
                 <LinearLayout
                     android:id="@+id/layoutWalletOptions"
@@ -544,6 +587,13 @@
                         android:layout_marginEnd="6dp" android:gravity="center" android:orientation="horizontal"
                         android:background="@drawable/bg_pos_search"
                         android:clickable="true" android:focusable="true">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_momo"
+                            android:scaleType="fitCenter"
+                            android:layout_marginEnd="6dp"
+                            android:contentDescription="@null"/>
                         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                             android:text="MoMo" android:textColor="#1C2333" android:textSize="13sp" android:textStyle="bold"/>
                     </LinearLayout>

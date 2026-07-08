@@ -252,9 +252,18 @@ public class ProductFormActivity extends AppCompatActivity {
         catch (NumberFormatException e) { product.costPrice = 0; }
         if (etDescription != null) product.description = etDescription.getText().toString().trim();
 
-        dao.save(product);
-        Toast.makeText(this, "Đã lưu sản phẩm", Toast.LENGTH_SHORT).show();
-        finish();
+        try {
+            dao.save(product);
+            Toast.makeText(this, "Đã lưu sản phẩm", Toast.LENGTH_SHORT).show();
+            finish();
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            if (msg != null && msg.contains("UNIQUE")) {
+                Toast.makeText(this, "SKU hoặc mã vạch đã tồn tại, vui lòng nhập khác", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Lưu thất bại: " + msg, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void confirmDelete() {

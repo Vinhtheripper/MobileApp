@@ -66,22 +66,35 @@
 git clone https://github.com/Vinhtheripper/MobileApp.git
 cd MobileApp
 
-# 2. Thêm file google-services.json vào app/
-# (lấy từ Firebase Console của project)
-
-# 3. Build
+# 2. Build
 ./gradlew assembleDebug
 
-# 4. Cài lên thiết bị / emulator
+# 3. Cài lên thiết bị / emulator
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
+> File `google-services.json` đã được đính kèm trong repo cho mục đích demo.  
+> Khi dữ liệu đã có, các shop và sản phẩm sẽ được tự động seed khi cài lần đầu.
+
 ### Tài khoản demo
+
+**Shop Demo (Cửa hàng Demo)**
 | Field | Giá trị |
 |---|---|
 | Email | `admin@mpos.com` |
 | Mật khẩu | `admin123` |
+| Role | Admin |
 | PIN Admin | `0000` |
+
+**Shop Chuyên Làng Nghề** (60 sản phẩm thủ công mỹ nghệ)
+| Field | Giá trị |
+|---|---|
+| Email | `duongtanminh2306@gmail.com` |
+| Mật khẩu | `23240121` |
+| Role | Admin |
+| PIN Admin | `0000` |
+
+> Tài khoản Manager / Staff dùng chung: `manager@mpos.com` / `manager123` (PIN `1234`), `staff@mpos.com` / `staff123`
 
 ---
 

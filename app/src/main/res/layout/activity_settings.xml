@@ -328,6 +328,72 @@
 
             </LinearLayout>
 
+            <!-- Section: MoMo QR (Admin/Manager only) -->
+            <LinearLayout
+                android:id="@+id/sectionMomoQR"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="20dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MOMO — MÃ QR THANH TOÁN"
+                    android:textColor="#6B7280"
+                    android:textSize="11sp"
+                    android:letterSpacing="0.08"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card_white_12"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tải lên ảnh QR MoMo của bạn. Khách hàng sẽ thấy QR này khi chọn thanh toán MoMo."
+                        android:textColor="#64748B"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="12dp"/>
+
+                    <ImageView
+                        android:id="@+id/imgMomoQRPreview"
+                        android:layout_width="160dp"
+                        android:layout_height="160dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/ic_momo"
+                        android:scaleType="fitCenter"
+                        android:layout_marginBottom="12dp"
+                        android:contentDescription="QR MoMo preview"/>
+
+                    <LinearLayout
+                        android:id="@+id/btnUploadMomoQR"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:background="@drawable/bg_btn_login_pill"
+                        android:clickable="true"
+                        android:focusable="true">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="📷  Chọn ảnh QR MoMo"
+                            android:textColor="#FFFFFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
             <!-- Section: Ứng dụng -->
             <TextView
                 android:layout_width="wrap_content"
