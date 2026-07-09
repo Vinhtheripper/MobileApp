@@ -18,7 +18,6 @@
 | **Ca làm việc** | Mở/đóng ca, báo cáo theo ca, trạng thái hiển thị real-time |
 | **Báo cáo** | Doanh thu theo ngày/tháng, lợi nhuận, top sản phẩm |
 | **Vận chuyển** | Tích hợp GHN & GHTK, tạo đơn và theo dõi tracking |
-| **Omnichannel** | Kết nối Shopee, TikTok Shop |
 | **AI Trợ lý** | Chat hỏi đáp thông minh qua Groq API (Llama 3.1), phân tích dữ liệu shop |
 | **Đồng bộ đám mây** | Firebase Realtime Database, push notification (FCM) |
 | **Cài đặt** | Thông tin cửa hàng, VietQR, tích điểm, mẫu hoá đơn, quản lý PIN |
